@@ -1,0 +1,10 @@
+--- a/net/minecraft/world/entity/Entity.java
++++ b/net/minecraft/world/entity/Entity.java
+@@ -386,6 +_,7 @@
+     // Paper start - EAR 2
+     public final boolean defaultActivationState;
+     public long activatedTick = Integer.MIN_VALUE;
++    public long emberFullTick = Integer.MIN_VALUE; // Ember - entity tiers: last tick this entity was inside a player's full-tick ring
+     public boolean isTemporarilyActive;
+     public long activatedImmunityTick = Integer.MIN_VALUE;
+ 

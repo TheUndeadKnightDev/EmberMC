@@ -78,14 +78,17 @@ measured. No milestone proceeds past a broken build.
 - [ ] Opt-in Prometheus-style endpoint over the same gauges
 - [ ] Tests: ring statistics, phase accounting sums to the tick, watchdog cooldown
 
-## Milestone 4 — Entity engine
+## Milestone 4 — Entity engine (in progress)
 
-- Adaptive ticking tiers by distance to active players: FULL / REDUCED / MINIMAL,
-  with overrides for gameplay-critical entities (targeting a player, in combat,
-  holding a lead, carrying a passenger, projectiles in flight, items near players)
-- Builds on Paper's activation range rather than replacing it
-- Per-world tuning; per-type tuning; all bounded and observable
-- Benchmarks: 10k passive mobs, mob farm, villager hall
+- [x] Tiers on top of Paper's activation range: full ring / outer ring (every Nth tick, staggered) /
+  Paper inactive beyond - `docs/optimisations/entity-tiers.md`
+- [x] Exemptions so nothing a player interacts with is throttled: targets, leashes, damage, riders,
+  projectiles, items, falling, swimming, burning, babies, breeding, Paper's always-active types
+- [x] Per-world `entities.optimization` finally applied; global `entities.tiers.*` overrides and kill switch
+- [x] `/ember entities` shows full vs reduced counts and each world's tier; `ember_entities_*` gauges
+- [x] `autosave` profiler phase (the five-minute stall now has a name)
+- [ ] Measurement with a player at a 400–500 zombie pen: off / balanced / performance / extreme
+- [ ] Per-type tuning; villager hall and passive-mob benchmarks
 
 ## Milestone 5 — Pathfinding and collision
 

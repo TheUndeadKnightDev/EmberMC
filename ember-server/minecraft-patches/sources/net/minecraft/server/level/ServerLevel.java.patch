@@ -1,10 +1,12 @@
 --- a/net/minecraft/server/level/ServerLevel.java
 +++ b/net/minecraft/server/level/ServerLevel.java
-@@ -183,6 +_,13 @@
+@@ -183,6 +_,15 @@
  import org.slf4j.Logger;
  
  public class ServerLevel extends Level implements WorldGenLevel, ServerEntityGetter, ca.spottedleaf.moonrise.patches.chunk_system.level.ChunkSystemServerLevel, ca.spottedleaf.moonrise.patches.chunk_system.level.ChunkSystemLevelReader, ca.spottedleaf.moonrise.patches.chunk_tick_iteration.ChunkTickServerLevel { // Paper - rewrite chunk system // Paper - chunk tick iteration
 +    public final org.embermc.ember.profiler.WorldTimes emberTimes = new org.embermc.ember.profiler.WorldTimes(); // Ember - profiler: this world's share of the tick
++    public org.embermc.ember.entity.EntityTiers.Level emberTierLevel = org.embermc.ember.entity.EntityTiers.Level.VANILLA; // Ember - entity tiers: resolved once per tick in ActivationRange
++    public int emberTierInterval = 1; // Ember - entity tiers
 +    // Ember start - per-world config
 +    private org.embermc.ember.config.EmberWorldConfiguration emberConfig;
 +    public org.embermc.ember.config.EmberWorldConfiguration emberConfig() {
@@ -70,3 +72,12 @@
              profiler.pop();
              } // Paper - option to disable ticking
              this.spigotConfig.currentPrimedTnt = 0; // Spigot
+@@ -1401,7 +_,7 @@
+         profiler.push(entity.typeHolder()::getRegisteredName);
+         profiler.incrementCounter("tickNonPassenger");
+         final boolean isActive = io.papermc.paper.entity.activation.ActivationRange.checkIfActive(entity); // Paper - EAR 2
+-        if (isActive) { // Paper - EAR 2
++        if (isActive && !org.embermc.ember.entity.EntityTiers.reduceThisTick(entity, this, net.minecraft.server.MinecraftServer.currentTick)) { // Paper - EAR 2 // Ember - entity tiers: outer-ring entities tick fully only every Nth tick
+         entity.tick();
+         entity.postTick(); // CraftBukkit
+         } else {entity.inactiveTick();} // Paper - EAR 2

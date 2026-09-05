@@ -29,6 +29,32 @@ public class EmberGlobalConfiguration extends EmberConfigurationPart {
         Restart-only.""")
     public Preset profile = Preset.BALANCED;
 
+    public Entities entities = new Entities();
+
+    @ConfigSerializable
+    public static class Entities extends EmberConfigurationPart {
+        public Tiers tiers = new Tiers();
+
+        @ConfigSerializable
+        public static class Tiers extends EmberConfigurationPart {
+            @Comment("""
+                Split Paper's entity activation range into an inner ring that ticks fully every tick and an
+                outer ring that ticks fully every Nth tick (staggered). Anything a player is interacting with -
+                targets, leashes, damage, riders, projectiles, items, falling or swimming mobs - always ticks
+                fully. How wide the inner ring is and what N is come from the server profile or the world's
+                entities.optimization; the two overrides below force one value for every world. Reload-safe.""")
+            public boolean enabled = true;
+
+            @Comment("0 = from the profile (balanced 0.75, performance 0.5, extreme 0.4). Otherwise the fraction of each activation range that stays on full tick. Reload-safe.")
+            @io.papermc.paper.configuration.constraint.Constraints.Min(0)
+            public double fullRangeFraction = 0;
+
+            @Comment("0 = from the profile (balanced 2, performance 2, extreme 4). Otherwise outer-ring entities tick fully every this many ticks. Reload-safe.")
+            @io.papermc.paper.configuration.constraint.Constraints.Min(0)
+            public int reducedInterval = 0;
+        }
+    }
+
     public Console console = new Console();
 
     @ConfigSerializable

@@ -17,6 +17,22 @@
          new com.destroystokyo.paper.event.server.ServerTickStartEvent(this.tickCount+1).callEvent(); // Paper - Server Tick Events
          this.tickCount++;
          this.tickRateManager.tick();
+@@ -1630,6 +_,7 @@
+             playerSaveInterval = this.autosavePeriod;
+         }
+         Profiler.get().push("save");
++        final long emberSave = org.embermc.ember.profiler.EmberProfiler.start(); // Ember - profiler
+         final boolean fullSave = this.autosavePeriod > 0 && this.tickCount % this.autosavePeriod == 0;
+         try {
+             this.isSaving = true;
+@@ -1647,6 +_,7 @@
+         } finally {
+             this.isSaving = false;
+         }
++        org.embermc.ember.profiler.EmberProfiler.end(org.embermc.ember.profiler.Phase.AUTOSAVE, emberSave); // Ember - profiler
+         Profiler.get().pop();
+         // Paper end - Incremental chunk and player saving
+ 
 @@ -1657,6 +_,7 @@
          long remaining = this.nextTickTimeNanos - endTime;
          new com.destroystokyo.paper.event.server.ServerTickEndEvent(this.tickCount, ((double)(endTime - this.currentTickStart) / 1000000D), remaining).callEvent();

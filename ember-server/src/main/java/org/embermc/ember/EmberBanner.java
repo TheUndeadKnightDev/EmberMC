@@ -102,6 +102,10 @@ public final class EmberBanner {
             row(field("Upstream", upstream + " (compatible)")),
             row(field("Java", Runtime.version().toString())),
             row(field("Profiler", "phases timed · plugins off (/ember profiler start)")),
+            row(field("Entities", org.embermc.ember.config.EmberConfigurations.isInitialized()
+                && org.embermc.ember.config.EmberConfigurations.global().entities.tiers.enabled
+                ? "tiered ticking on · profile " + org.embermc.ember.config.EmberConfigurations.global().profile.name().toLowerCase(java.util.Locale.ROOT)
+                : "tiered ticking off")),
             bottom,
         };
 

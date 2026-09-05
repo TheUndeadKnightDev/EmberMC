@@ -160,6 +160,14 @@ final class ProfilerCommands {
         final List<Map.Entry<String, int[]>> sorted = new ArrayList<>(byType.entrySet());
         sorted.sort(Comparator.comparingInt((Map.Entry<String, int[]> e) -> e.getValue()[0]).reversed());
         sender.sendMessage(row("Total", text(total + " across " + Bukkit.getWorlds().size() + " worlds", WHITE)));
+        sender.sendMessage(row("Last tick", text(org.embermc.ember.entity.EntityTiers.fullLastTick() + " full, "
+            + org.embermc.ember.entity.EntityTiers.reducedLastTick() + " reduced", WHITE)
+            .append(text("  (reduced = outer ring, inactive-ticked this tick)", ASH))));
+        for (final ServerLevel level : MinecraftServer.getServer().getAllLevels()) {
+            sender.sendMessage(text("  " + level.getWorld().getName() + ": tier " + level.emberTierLevel.name().toLowerCase(Locale.ROOT)
+                + (level.emberTierLevel == org.embermc.ember.entity.EntityTiers.Level.VANILLA ? "" : ", full ring "
+                + Math.round(org.embermc.ember.entity.EntityTiers.fullFraction(level.emberTierLevel) * 100) + "% of range, every " + level.emberTierInterval + " ticks outside"), ASH));
+        }
         int shown = 0;
         for (final var e : sorted) {
             if (shown++ == 15) {

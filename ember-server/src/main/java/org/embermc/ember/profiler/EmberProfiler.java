@@ -88,6 +88,7 @@ public final class EmberProfiler {
         CURRENT[Phase.OTHER.ordinal()] = Math.max(0, tick - covered);
 
         SpikeWatchdog.onTick(tick, CURRENT);
+        org.embermc.ember.entity.EntityTiers.endTick();
 
         for (int i = 0; i < Phase.COUNT; i++) {
             RINGS[i].record(CURRENT[i]);

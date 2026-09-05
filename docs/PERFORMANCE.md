@@ -50,6 +50,18 @@ hopper move event - is refused while any plugin listens for it. These values
 are settled practice, not EmberMC measurements; the profiler is there to
 measure them on your server.
 
+**Entity tiers** (Milestone 4, first layer; `docs/optimisations/entity-tiers.md`).
+Paper's activation range is binary; EmberMC splits it into a full ring and an
+outer ring that ticks fully every Nth tick, with everything a player interacts
+with exempt. Expected 0.63–0.78× of the entity phase on uniform crowds at
+balanced/performance; **not yet measured** - the run needs a player at the rig.
+
+**Autosave as a phase** (Milestone 4). Paper saves players, level data and
+chunks at the end of every tick, with a full save every `autosave` ticks
+(6000 = five minutes). On the test host that full save stalls the tick for
+0.3–1.9 s on Paper, Purpur and EmberMC alike; only EmberMC's watchdog reported
+it. It now has its own phase so the report says "autosave" instead of "other".
+
 ## Standing rules
 
 - Never remove vanilla behaviour for a benchmark number. Change *when* and

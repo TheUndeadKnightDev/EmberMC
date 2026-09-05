@@ -27,6 +27,8 @@ public enum Phase {
     CONNECTIONS("connections"),
     /** Commands typed at the console, executed on the main thread after the network tick. */
     COMMANDS("console commands"),
+    /** Player, level and chunk saving at the end of the tick: incremental every tick, a full save every autosave period. */
+    AUTOSAVE("autosave"),
     /** Everything in the tick not covered above. Derived, never timed directly. */
     OTHER("other");
 

@@ -22,6 +22,29 @@ running server; read again 12 s later. **Caveats.** One run, one rig shape,
 one machine; Alternate Current is Paper's own engine, EmberMC's contribution is
 making it the default. It is a switch worth flipping, not an EmberMC invention.
 
+### R2 — Same rig, three servers on one host: Paper, Purpur, EmberMC (2026-09-05)
+
+Common yardstick `/mspt`, 5-second window (avg / min / max), read ~20 s after
+the rig was built. All three servers are containers on the same InterServer
+host, Temurin 25, 3.5 GB heap, idle apart from the rig.
+
+| Server | redstone engine | avg | max |
+| --- | --- | --- | --- |
+| Paper `a2a42c5b` (stock) | vanilla (default) | 3.0 ms | 16.7 ms |
+| Purpur 26.2 (stock) | vanilla (default) | 2.5 ms | 13.0 ms |
+| **EmberMC** `1704ed8d8` | Alternate Current (default) | **0.6 ms** | **1.2 ms** |
+
+**Caveats.** One run each; three different containers share one host, so
+absolute numbers carry noise (Purpur's slightly lower vanilla figure is within
+it). The comparison that holds is engine-vs-engine on the same rig. EmberMC's
+result *is* Paper's Alternate Current; the difference between the rows is a
+default.
+
+**Side finding.** All three idle windows show a periodic 0.3–1.9 s tick every
+five minutes (`1825.8` max on stock Paper's 10-second column) - the autosave.
+EmberMC's watchdog was the only thing that reported it; from this build it is
+its own profiler phase (`autosave`) so the report names it.
+
 ## Rules
 
 ## Rules

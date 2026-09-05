@@ -1,0 +1,43 @@
+--- a/io/papermc/paper/entity/activation/ActivationRange.java
++++ b/io/papermc/paper/entity/activation/ActivationRange.java
+@@ -142,6 +_,12 @@
+         maxRange = Math.max(maxRange, villagerActivationRange);
+         maxRange = Math.min((world.spigotConfig.simulationDistance << 4) - 8, maxRange);
+ 
++        // Ember start - entity tiers: resolve this world's tier once per tick
++        final net.minecraft.server.level.ServerLevel emberLevel = (net.minecraft.server.level.ServerLevel) world;
++        emberLevel.emberTierLevel = org.embermc.ember.entity.EntityTiers.levelFor(emberLevel);
++        emberLevel.emberTierInterval = org.embermc.ember.entity.EntityTiers.interval(emberLevel.emberTierLevel);
++        final double emberFull = org.embermc.ember.entity.EntityTiers.fullFraction(emberLevel.emberTierLevel);
++        // Ember end - entity tiers
+         for (final Player player : world.players()) {
+             player.activatedTick = MinecraftServer.currentTick;
+             if (world.spigotConfig.ignoreSpectatorActivation && player.isSpectator()) {
+@@ -150,6 +_,15 @@
+ 
+             final int worldHeight = world.getHeight();
+             ActivationRange.maxBB = player.getBoundingBox().inflate(maxRange, worldHeight, maxRange);
++            // Ember start - entity tiers: inner rings are a fraction of each type's range
++            ActivationType.MISC.emberFullBox = player.getBoundingBox().inflate(miscActivationRange * emberFull, worldHeight, miscActivationRange * emberFull);
++            ActivationType.RAIDER.emberFullBox = player.getBoundingBox().inflate(raiderActivationRange * emberFull, worldHeight, raiderActivationRange * emberFull);
++            ActivationType.ANIMAL.emberFullBox = player.getBoundingBox().inflate(animalActivationRange * emberFull, worldHeight, animalActivationRange * emberFull);
++            ActivationType.MONSTER.emberFullBox = player.getBoundingBox().inflate(monsterActivationRange * emberFull, worldHeight, monsterActivationRange * emberFull);
++            ActivationType.WATER.emberFullBox = player.getBoundingBox().inflate(waterActivationRange * emberFull, worldHeight, waterActivationRange * emberFull);
++            ActivationType.FLYING_MONSTER.emberFullBox = player.getBoundingBox().inflate(flyingActivationRange * emberFull, worldHeight, flyingActivationRange * emberFull);
++            ActivationType.VILLAGER.emberFullBox = player.getBoundingBox().inflate(villagerActivationRange * emberFull, worldHeight, villagerActivationRange * emberFull);
++            // Ember end - entity tiers
+             ActivationType.MISC.boundingBox = player.getBoundingBox().inflate(miscActivationRange, worldHeight, miscActivationRange);
+             ActivationType.RAIDER.boundingBox = player.getBoundingBox().inflate(raiderActivationRange, worldHeight, raiderActivationRange);
+             ActivationType.ANIMAL.boundingBox = player.getBoundingBox().inflate(animalActivationRange, worldHeight, animalActivationRange);
+@@ -176,6 +_,11 @@
+      * @param entity
+      */
+     private static void activateEntity(final Entity entity) {
++        // Ember start - entity tiers: checked for every player, since a later player may be the close one
++        if (entity.emberFullTick < MinecraftServer.currentTick && entity.activationType.emberFullBox.intersects(entity.getBoundingBox())) {
++            entity.emberFullTick = MinecraftServer.currentTick;
++        }
++        // Ember end - entity tiers
+         if (MinecraftServer.currentTick > entity.activatedTick) {
+             if (entity.defaultActivationState) {
+                 entity.activatedTick = MinecraftServer.currentTick;
