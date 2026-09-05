@@ -98,6 +98,24 @@ the `vanilla` row is your own Paper baseline, not a figure from another machine.
 machine. The point is that the mechanism, and the built-in tool that measures it,
 both do what they say.
 
+### R5 - Redstone re-validated live on the current build (2026-09-05)
+
+Re-running R1's comparison on `26.2-DEV-3a6a3de`. A 31x31 dust plane (961 blocks)
+on smooth stone, driven by a two-observer clock into one corner, force-loaded, no
+players. The redstone engine was switched with `misc.redstone-implementation` and
+a full restart (the force-loaded rig resumes clocking on boot), and the `block
+ticks` phase read with `/ember worlds` (5 s mean) each time.
+
+| Redstone engine | block-ticks phase (5 s mean) |
+| --- | --- |
+| **Vanilla** (Paper default) | ~1.27 ms |
+| **Alternate Current** (EmberMC default) | **0.14 ms** |
+
+About **9x lower**, in line with R1. Note this box had been left on `VANILLA`;
+it is now on `ALTERNATE_CURRENT`, which is the value EmberMC intends as the
+default. As R1 says: Alternate Current is Paper's own engine, and EmberMC's part
+is shipping it switched on.
+
 ## Rules
 
 ## Rules
