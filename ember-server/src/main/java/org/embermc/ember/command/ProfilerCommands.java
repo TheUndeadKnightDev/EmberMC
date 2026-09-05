@@ -208,6 +208,29 @@ final class ProfilerCommands {
         }
     }
 
+    /* ---- /ember security ------------------------------------------------- */
+
+    static void security(final CommandSender sender) {
+        sender.sendMessage(header("Security"));
+        final var pg = EmberConfigurations.global().security.packetGuard;
+        sender.sendMessage(row("Packet Guard", pg.enabled
+            ? text("on", NamedTextColor.GREEN).append(text("  " + org.embermc.ember.security.PacketGuard.totalBlocked() + " packets blocked since start", ASH))
+            : text("off", ASH)));
+        sender.sendMessage(text("  Category        limit/s   burst   action     allowed    blocked", ASH));
+        for (final org.embermc.ember.security.PacketCategory c : org.embermc.ember.security.PacketCategory.VALUES) {
+            final var lim = pg.limitFor(c);
+            final long blocked = org.embermc.ember.security.PacketGuard.blocked(c);
+            sender.sendMessage(text()
+                .append(text(String.format("  %-14s", c.name().toLowerCase(Locale.ROOT)), WHITE))
+                .append(text(String.format("%8.0f%8.0f  ", lim.perSecond, lim.burst), ASH))
+                .append(text(String.format("%-9s", lim.action.name().toLowerCase(Locale.ROOT)), ASH))
+                .append(text(String.format("%9d", org.embermc.ember.security.PacketGuard.allowed(c)), ASH))
+                .append(text(String.format("%11d", blocked), blocked > 0 ? NamedTextColor.YELLOW : ASH))
+                .build());
+        }
+        sender.sendMessage(text("  Per connection. Paper's all-packets limiter runs ahead of this. Never logs contents or auth.", ASH));
+    }
+
     /* ---- presentation ---------------------------------------------------- */
 
     private static Component header(final String title) {

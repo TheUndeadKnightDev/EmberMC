@@ -102,6 +102,9 @@ public final class EmberBanner {
             row(field("Upstream", upstream + " (compatible)")),
             row(field("Java", Runtime.version().toString())),
             row(field("Profiler", "phases timed · plugins off (/ember profiler start)")),
+            row(field("Security", org.embermc.ember.config.EmberConfigurations.isInitialized()
+                && org.embermc.ember.config.EmberConfigurations.global().security.packetGuard.enabled
+                ? "Packet Guard on · per-category limits" : "Packet Guard off")),
             row(field("Adaptive", org.embermc.ember.config.EmberConfigurations.isInitialized()
                 && org.embermc.ember.config.EmberConfigurations.global().adaptive.enabled
                 ? "on · light/moderate/aggressive at p95 "

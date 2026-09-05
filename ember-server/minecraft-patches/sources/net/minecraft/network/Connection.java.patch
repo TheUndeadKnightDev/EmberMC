@@ -1,0 +1,28 @@
+--- a/net/minecraft/network/Connection.java
++++ b/net/minecraft/network/Connection.java
+@@ -111,6 +_,7 @@
+     protected final java.util.Map<Class<? extends net.minecraft.network.protocol.Packet<?>>, io.papermc.paper.util.IntervalledCounter> packetSpecificLimits = new java.util.HashMap<>();
+ 
+     private boolean stopReadingPackets;
++    public final org.embermc.ember.security.PacketGuard.Session emberGuard = new org.embermc.ember.security.PacketGuard.Session(); // Ember - Packet Guard
+     private void killForPacketSpam() {
+         this.sendPacket(new ClientboundDisconnectPacket(io.papermc.paper.adventure.PaperAdventure.asVanilla(io.papermc.paper.configuration.GlobalConfiguration.get().packetLimiter.kickMessage)), PacketSendListener.thenRun(() -> {
+             this.disconnect(io.papermc.paper.adventure.PaperAdventure.asVanilla(io.papermc.paper.configuration.GlobalConfiguration.get().packetLimiter.kickMessage));
+@@ -267,6 +_,17 @@
+                 }
+             }
+             // Paper end - packet limiter
++            // Ember start - Packet Guard: per-category limits on top of Paper's all-packets limiter
++            if (org.embermc.ember.security.PacketGuard.enabled()) {
++                final org.embermc.ember.security.PacketCategory emberCat = org.embermc.ember.security.PacketCategory.of(packet.getClass().getSimpleName());
++                if (!this.emberGuard.allow(emberCat, io.papermc.paper.util.MCUtil.emberPacketSize(packet), System.nanoTime())) {
++                    if (this.emberGuard.shouldKick()) {
++                        this.killForPacketSpam();
++                    }
++                    return;
++                }
++            }
++            // Ember end - Packet Guard
+             if (packetListener.shouldHandleMessage(packet)) {
+                 try {
+                     genericsFtw(packet, packetListener);

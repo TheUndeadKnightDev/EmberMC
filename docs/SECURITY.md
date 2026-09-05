@@ -1,6 +1,6 @@
 # Security
 
-**Status: EmberMC adds no protections yet.** The current build has exactly
+**Status: the Packet Guard core shipped in Milestone 8** (per-connection, per-category token-bucket limiter with actions log/warn/throttle/drop/kick, `/ember security`, `docs/optimisations/packet-guard.md`). The design rules below still govern what comes next. The current build has exactly
 Paper's exploit mitigations — which are substantial — and nothing more. The
 Ember Security Engine and Ember Packet Guard are Milestone 8. This document
 fixes the design rules before that work begins.

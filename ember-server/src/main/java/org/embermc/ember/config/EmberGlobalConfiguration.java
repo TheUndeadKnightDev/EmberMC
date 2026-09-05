@@ -55,6 +55,71 @@ public class EmberGlobalConfiguration extends EmberConfigurationPart {
         }
     }
 
+    public Security security = new Security();
+
+    @ConfigSerializable
+    public static class Security extends EmberConfigurationPart {
+        public PacketGuard packetGuard = new PacketGuard();
+
+        @ConfigSerializable
+        public static class PacketGuard extends EmberConfigurationPart {
+            @Comment("""
+                Per-category inbound packet limits, on top of Paper's own all-packets limiter. Each category
+                is a token bucket (rate per second + a burst allowance, so a legitimate flurry is fine) with
+                an optional max payload size and an action: log (count only), warn, throttle/drop (drop the
+                packet, keep the player), or kick. Limits are per connection. The guard never logs packet
+                contents or authentication data. Reload-safe.""")
+            public boolean enabled = true;
+
+            public Limit movement   = new Limit(200, 400, 0, GuardActionValue.THROTTLE);
+            public Limit armSwing    = new Limit(60, 120, 0, GuardActionValue.DROP);
+            public Limit interact    = new Limit(40, 80, 0, GuardActionValue.THROTTLE);
+            public Limit inventory   = new Limit(40, 100, 0, GuardActionValue.THROTTLE);
+            public Limit bookSign    = new Limit(4, 8, 12288, GuardActionValue.KICK);
+            public Limit chat        = new Limit(8, 16, 0, GuardActionValue.THROTTLE);
+            public Limit command     = new Limit(15, 30, 0, GuardActionValue.THROTTLE);
+            public Limit tabComplete = new Limit(20, 40, 0, GuardActionValue.DROP);
+            public Limit recipe      = new Limit(8, 16, 0, GuardActionValue.THROTTLE);
+            public Limit creative    = new Limit(20, 60, 0, GuardActionValue.THROTTLE);
+            public Limit other       = new Limit(500, 1000, 0, GuardActionValue.LOG);
+
+            public enum GuardActionValue { LOG, WARN, THROTTLE, DROP, KICK }
+
+            @ConfigSerializable
+            public static class Limit extends EmberConfigurationPart {
+                @Comment("Sustained packets per second allowed for this category.")
+                public double perSecond = 100;
+                @Comment("Extra packets a short burst may spend at once.")
+                public double burst = 200;
+                @Comment("Largest payload in bytes; 0 = no size check.")
+                public int maxBytes = 0;
+                @Comment("log | warn | throttle | drop | kick")
+                public GuardActionValue action = GuardActionValue.THROTTLE;
+
+                public Limit() { }
+                public Limit(final double perSecond, final double burst, final int maxBytes, final GuardActionValue action) {
+                    this.perSecond = perSecond; this.burst = burst; this.maxBytes = maxBytes; this.action = action;
+                }
+            }
+
+            public Limit limitFor(final org.embermc.ember.security.PacketCategory c) {
+                return switch (c) {
+                    case MOVEMENT -> movement;
+                    case ARM_SWING -> armSwing;
+                    case INTERACT -> interact;
+                    case INVENTORY -> inventory;
+                    case BOOK_SIGN -> bookSign;
+                    case CHAT -> chat;
+                    case COMMAND -> command;
+                    case TAB_COMPLETE -> tabComplete;
+                    case RECIPE -> recipe;
+                    case CREATIVE -> creative;
+                    case OTHER -> other;
+                };
+            }
+        }
+    }
+
     public Adaptive adaptive = new Adaptive();
 
     @ConfigSerializable

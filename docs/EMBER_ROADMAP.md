@@ -113,17 +113,18 @@ measured. No milestone proceeds past a broken build.
 - Diagnostics for unnecessary chunk retention
 - Benchmarks: rapid elytra travel, mass teleport, generation stress
 
-## Milestone 8 — Packet Guard and exploit protection
+## Milestone 8 — Packet Guard and exploit protection (core shipped)
 
-- Centralised `Ember Packet Guard`: per-player, per-category rate tracking with
-  burst detection; payload size limits; malformed-input detection
-- Actions per rule: LOG / WARN / THROTTLE / DROP / KICK
-- Covers movement, interaction, inventory, book/NBT/component payloads,
-  commands, tab completion, recipes, creative inventory, plugin messages,
-  vehicle movement, decompression exhaustion
-- `/ember security`, `/ember network`; metrics for rates, drops, throttles
-- Never logs authentication or session data
-- Tests: normal play under limits; hostile input fuzzing
+- [x] Per-connection, per-category token-bucket limiter after Paper's all-packets limiter —
+  `docs/optimisations/packet-guard.md`
+- [x] Categories: movement, arm-swing, interact, inventory, book/sign, chat, command,
+  tab-complete, recipe, creative, other; classified by packet simple name (unit-tested)
+- [x] Burst allowance; payload-size limit for book/sign; actions log / warn / throttle / drop / kick
+- [x] `/ember security` (per-category limit, action, allowed, blocked); `ember_packets_blocked` gauge;
+  console warns rate-limited; never logs contents or auth
+- [x] Reload-safe, per-category configurable, kill switch `security.packet-guard.enabled`
+- [x] Tests: `TokenBucketTest`, `PacketCategoryTest`
+- [ ] Plugin-message and decompression-exhaustion categories; live flood benchmark on the box
 
 ## Milestone 9 — Adaptive Performance Engine (brought forward; first responder shipped)
 

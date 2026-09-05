@@ -73,6 +73,13 @@ runs EmberMC's own tests: ring statistics, the adaptive state machine, the
 tuner's preset table (every key has an exact upstream default, every changed
 key states its visible effect, and only the redstone entry may say "measured").
 
+**Packet Guard** (Milestone 8; `docs/optimisations/packet-guard.md`). A
+per-connection, per-category token-bucket limiter on top of Paper's all-packets
+limiter, with burst allowance, book/sign payload caps, and log/warn/throttle/
+drop/kick per category. `/ember security` shows what it is doing. Cost is a
+short string classify and a two-long refill per packet; the pure pieces are
+unit-tested.
+
 ## Standing rules
 
 - Never remove vanilla behaviour for a benchmark number. Change *when* and

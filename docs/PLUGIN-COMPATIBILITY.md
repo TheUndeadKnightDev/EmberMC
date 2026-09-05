@@ -24,6 +24,7 @@ register below with a compatibility toggle.
 | M1 | Server brand and name are EmberMC | `Bukkit.getName()`, `/version`, manifest | none — this is the point |
 | M1 | `/version` does not check PaperMC for updates | `/version` output | none |
 | M3 | Redstone engine defaults to Alternate Current on new installs | Update order in rare edge-case contraptions; measured 11x cheaper block-ticks phase | `misc.redstone-implementation: VANILLA` in `paper-world-defaults.yml` (Paper's own key). Existing installs keep whatever their file says |
+| M8 | Packet Guard: per-category inbound rate/size limits per connection | A well-behaved client never hits them; a throttled packet is dropped and re-sent, invisible in play; abusive rates are throttled or kicked | `security.packet-guard.enabled: false`, or per-category action/limits in EmberMC's config |
 | M4 | Entity tiers: mobs in the outer part of the activation range tick fully every Nth tick | A mob at mid distance moves at 1/N speed and reacts a little later to non-exempt stimuli; never frozen; Bukkit events fire on the ticks taken | `entities.tiers.enabled: false` (global) or `entities.optimization: VANILLA` (per world) in EmberMC's config |
 | M3 | `/ember tune apply <preset>` writes Paper/Spigot/Bukkit performance keys | Only what the plan shows; each line names the visible effect; hopper move-event is refused while any plugin listens | `/ember tune revert` writes upstream defaults; every write is backed up to `ember-backups/` |
 

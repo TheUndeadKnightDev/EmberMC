@@ -1,0 +1,30 @@
+--- a/src/main/java/io/papermc/paper/util/MCUtil.java
++++ b/src/main/java/io/papermc/paper/util/MCUtil.java
+@@ -62,6 +_,27 @@
+ import org.jspecify.annotations.Nullable;
+ 
+ public final class MCUtil {
++
++    // Ember start - Packet Guard payload size for size-checked categories, without reading contents
++    public static int emberPacketSize(final net.minecraft.network.protocol.Packet<?> packet) {
++        if (packet instanceof net.minecraft.network.protocol.game.ServerboundEditBookPacket book) {
++            int n = 0;
++            for (final String page : book.pages()) {
++                n += page.length();
++            }
++            return n;
++        }
++        if (packet instanceof net.minecraft.network.protocol.game.ServerboundSignUpdatePacket sign) {
++            int n = 0;
++            for (final String line : sign.getLines()) {
++                n += line.length();
++            }
++            return n;
++        }
++        return 0;
++    }
++    // Ember end
++
+     public static final java.util.concurrent.Executor MAIN_EXECUTOR = (run) -> {
+         if (!isMainThread()) {
+             MinecraftServer.getServer().execute(run);
