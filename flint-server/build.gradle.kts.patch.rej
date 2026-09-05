@@ -1,0 +1,82 @@
+++++ REJECTED HUNK: 1
+@@ -22,9 +22,21 @@
+     minecraftVersion = providers.gradleProperty("mcVersion")
+     gitFilePatches = false
+-    updatingMinecraft {
++    // Flint start - fork setup
++    val flint = forks.register("flint") {
++        upstream.patchDir("paperServer") {
++            upstreamPath = "paper-server"
++            excludes = setOf("src/minecraft", "patches", "build.gradle.kts")
++            patchesDir = rootDirectory.dir("flint-server/paper-patches")
++            outputDir = rootDirectory.dir("paper-server")
++        }
++    }
++    activeFork = flint
++    // Flint end - fork setup
++
++    /*updatingMinecraft { // Flint - only meaningful inside Paper's own repo
+         // oldPaperCommit = "d4fe85375af18bfa88f44d7c1e6a61904ae550cc"
+-    }
++    }*/ // Flint
+ }
+ tasks.generateDevelopmentBundle {
+++++ END HUNK
+
+++++ REJECTED HUNK: 2
+@@ -86,7 +98,21 @@
+     }
+ }
+-val log4jPlugins = sourceSets.create("log4jPlugins")
++// Flint start - compile upstream Paper sources alongside our own
++sourceSets {
++    main {
++        java { srcDir("../paper-server/src/main/java") }
++        resources { srcDir("../paper-server/src/main/resources") }
++    }
++    test {
++        java { srcDir("../paper-server/src/test/java") }
++        resources { srcDir("../paper-server/src/test/resources") }
++    }
++}
++val log4jPlugins = sourceSets.create("log4jPlugins") {
++    java { srcDir("../paper-server/src/log4jPlugins/java") }
++}
++// Flint end - compile upstream Paper sources alongside our own
+ configurations.named(log4jPlugins.compileClasspathConfigurationName) {
+     extendsFrom(configurations.compileClasspath.get())
+ }
+++++ END HUNK
+
+++++ REJECTED HUNK: 3
+@@ -109,7 +135,7 @@
+ }
+ dependencies {
+-    implementation(project(":paper-api"))
++    implementation(project(":flint-api")) // Flint
+     implementation("ca.spottedleaf:leafpile:1.2.0")
+     implementation("org.jline:jline-terminal-ffm:3.27.1") // use ffm on java 22+
+     implementation("org.jline:jline-terminal-jni:3.27.1") // fall back to jni on java 21
+++++ END HUNK
+
+++++ REJECTED HUNK: 5
+@@ -246,7 +272,7 @@
+     jvmArgumentProviders.add(provider)
+ }
+-val generatedDir: java.nio.file.Path = layout.projectDirectory.dir("src/generated/java").asFile.toPath()
++val generatedDir: java.nio.file.Path = layout.projectDirectory.dir("../paper-server/src/generated/java").asFile.toPath() // Flint
+ idea {
+     module {
+         generatedSourceDirs.add(generatedDir.toFile())
+++++ END HUNK
+
+++++ REJECTED HUNK: 6
+@@ -326,7 +352,7 @@
+     mainClass.set(null as String?)
+ }
+-fill {
++/* fill { // Flint start - Fill is PaperMC's publishing service; a fork must not publish to it
+     project("paper")
+     versionFamily(paperweight.minecraftVersion.map { it.split(".", "-").takeWhile { part -> part.toIntOrNull() != null }.take(2).joinToString(".") })
+     version(paperweight.minecraftVersion)
+++++ END HUNK

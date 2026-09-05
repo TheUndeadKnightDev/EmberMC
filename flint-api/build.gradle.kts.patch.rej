@@ -1,0 +1,56 @@
+++++ REJECTED HUNK: 1
+@@ -19,7 +19,11 @@
+ paperCheckstyle {
+     customJavadocTags = projectCustomJavadocTags
+-    directoriesToSkipFile = layout.projectDirectory.file(".checkstyle/ignored_directories.txt")
++    directoriesToSkipFile = layout.projectDirectory.file("../paper-api/.checkstyle/ignored_directories.txt") // Flint
++}
++
++tasks.named<io.papermc.paperweight.checkstyle.tasks.MergeCheckstyleConfigs>("mergeCheckstyleConfigs") { // Flint
++    overrideConfigFile.set(layout.projectDirectory.file("../paper-api/.checkstyle/checkstyle.xml"))
+ }
+ val annotationsVersion = "26.0.2"
+++++ END HUNK
+
+++++ REJECTED HUNK: 2
+@@ -105,10 +109,10 @@
+     testRuntimeOnly("org.junit.platform:junit-platform-launcher:6.0.3")
+     // checkstyle
+-    checkstyle(project(":paper-checkstyle"))
++    checkstyle(project(":flint-checkstyle")) // Flint
+ }
+-val generatedDir: java.nio.file.Path = layout.projectDirectory.dir("src/generated/java").asFile.toPath()
++val generatedDir: java.nio.file.Path = rootProject.layout.projectDirectory.dir("paper-api/src/generated/java").asFile.toPath() // Flint
+ idea {
+     module {
+         generatedSourceDirs.add(generatedDir.toFile())
+++++ END HUNK
+
+++++ REJECTED HUNK: 4
+@@ -199,8 +215,9 @@
+ val services = objects.newInstance<Services>()
+ tasks.withType<Javadoc>().configureEach {
++    (options as StandardJavadocDocletOptions).addStringOption("Xdoclint:none", "-quiet") // Flint - upstream javadoc warnings are not ours to fix
+     val options = options as StandardJavadocDocletOptions
+-    options.overview = "src/main/javadoc/overview.html"
++    options.overview = "../paper-api/src/main/javadoc/overview.html" // Flint
+     options.use()
+     options.isDocFilesSubDirs = true
+     options.links(
+++++ END HUNK
+
+++++ REJECTED HUNK: 5
+@@ -227,11 +244,11 @@
+     }
+     // workaround for https://github.com/gradle/gradle/issues/4046
+-    inputs.dir("src/main/javadoc").withPropertyName("javadoc-sourceset")
++    inputs.dir("../paper-api/src/main/javadoc").withPropertyName("javadoc-sourceset") // Flint
+     val fsOps = services.fileSystemOperations
+     doLast {
+         fsOps.copy {
+-            from("src/main/javadoc") {
++            from("../paper-api/src/main/javadoc") { // Flint
+                 include("**/doc-files/**")
+             }
+             into("build/docs/javadoc")
+++++ END HUNK

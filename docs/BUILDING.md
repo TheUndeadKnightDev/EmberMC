@@ -1,0 +1,117 @@
+# Building FlintMC
+
+## Prerequisites
+
+- **Git** 2.31 or newer
+- **JDK 25** (Gradle's toolchain support will provision one if you only have a
+  newer JRE, but having it installed is faster)
+- ~6 GB of free disk for the decompiled Minecraft sources and Gradle caches
+- 8 GB of RAM available to the build
+
+You do not need Paper checked out. paperweight fetches the exact Paper commit
+named in `gradle.properties` and generates the upstream trees for you.
+
+## Building
+
+```bash
+git clone <this repo> FlintMC
+cd FlintMC
+./gradlew applyAllPatches      # generate paper-*/ trees and apply Flint's patches
+./gradlew createPaperclipJar   # build the runnable server
+```
+
+Output: `flint-server/build/libs/flint-paperclip-<mc>-<build>.jar`.
+
+The first `applyAllPatches` decompiles Minecraft and takes several minutes.
+Later runs are incremental.
+
+## Running a test server
+
+```bash
+./gradlew runServer            # Mojang-mapped jar, working dir ./run
+```
+
+or copy the Paperclip jar into an empty directory and run it with
+`java -jar flint-paperclip-*.jar --nogui`.
+
+## Windows
+
+Two things bite on Windows, both scoped to the build rather than your global
+Git configuration:
+
+1. **Line endings.** Git for Windows ships `core.autocrlf=true` in its system
+   config, which converts the decompiled sources to CRLF and makes every
+   `git am` fail. The repo sets `core.autocrlf=false` locally, but paperweight
+   creates *new* Git repositories for the generated trees. Give Git the setting
+   through the environment for the build shell:
+
+   ```bash
+   export GIT_CONFIG_COUNT=1 GIT_CONFIG_KEY_0=core.autocrlf GIT_CONFIG_VALUE_0=false
+   ```
+
+2. **Committer identity.** Feature patches are applied with `git am`, which
+   needs an identity in the generated repositories. Again, through the
+   environment rather than `--global`:
+
+   ```bash
+   export GIT_COMMITTER_NAME="FlintMC Build" GIT_COMMITTER_EMAIL="build@flintmc.local"
+   export GIT_AUTHOR_NAME="FlintMC Build"    GIT_AUTHOR_EMAIL="build@flintmc.local"
+   ```
+
+`scripts/env.sh` sets both. Source it before building.
+
+If a run of `applyAllPatches` fails part-way, paperweight may have already
+written an *unpatched* `flint-*/build.gradle.kts`. Gradle configures those
+before the patch task can fix them, so the next run fails on
+`Project ':paper-checkstyle' could not be found`. Delete the three generated
+build scripts and run again:
+
+```bash
+rm -f flint-api/build.gradle.kts flint-server/build.gradle.kts flint-checkstyle/build.gradle.kts
+```
+
+## Where things live
+
+| Path | What | Committed? |
+| --- | --- | --- |
+| `flint-api/src`, `flint-server/src` | FlintMC's own classes | yes |
+| `flint-api/paper-patches` | patches to Paper API classes | yes |
+| `flint-server/paper-patches` | patches to Paper server classes | yes |
+| `flint-server/minecraft-patches` | patches to Mojang classes | yes |
+| `flint-*/build.gradle.kts.patch` | patches to Paper's build scripts | yes |
+| `paper-api/`, `paper-server/`, `paper-checkstyle/`, `.checkstyle/` | generated upstream trees (each a Git repo) | **no** |
+| `flint-server/src/minecraft` | decompiled Minecraft with patches applied (a Git repo) | **no** |
+| `flint-*/build.gradle.kts` | generated from the `.patch` next to it | **no** |
+
+## Making a change
+
+**To FlintMC's own code**: edit under `flint-*/src` and build. No patch system
+involved.
+
+**To a Paper class**: edit the file inside `paper-server/` (or `paper-api/`),
+then
+
+```bash
+./gradlew fixupServerFilePatches      # fold your edit into the file-patch commit
+./gradlew rebuildServerFilePatches    # regenerate flint-server/paper-patches/files
+```
+
+(`Api` instead of `Server` for the API tree.) Mark every changed line with a
+`// Flint - <reason>` comment so the patch is self-describing.
+
+**To a Mojang class**: same, inside `flint-server/src/minecraft/java`, with
+`fixupMinecraftFilePatches` and `rebuildMinecraftFilePatches`.
+
+**A large feature spanning many files**: commit it as its own commit in the
+relevant generated repo and run `rebuild<Project>FeaturePatches`. The commit
+message becomes the patch header — explain intent there.
+
+**To a build script**: edit the generated `flint-*/build.gradle.kts` and run
+`./gradlew rebuildPaperSingleFilePatches`.
+
+## Tests
+
+```bash
+./gradlew :flint-server:test
+./gradlew :flint-api:test
+```
