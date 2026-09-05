@@ -141,7 +141,14 @@ measured. No milestone proceeds past a broken build.
   console warns rate-limited; never logs contents or auth
 - [x] Reload-safe, per-category configurable, kill switch `security.packet-guard.enabled`
 - [x] Tests: `TokenBucketTest`, `PacketCategoryTest`
-- [ ] Plugin-message and decompression-exhaustion categories; live flood benchmark on the box
+- [x] Plugin-message category added (ServerboundCustomPayloadPacket / cookie response;
+  BungeeCord-channel and custom-payload spam was falling under "other"). Config
+  security.packet-guard.plugin-message (20/s, 60 burst, 32 KB, throttle), limitFor
+  case, PacketCategoryTest coverage.
+- [x] Reviewed: decompression-exhaustion (zip bomb) is ALREADY capped by Paper
+  (CompressionDecoder MAXIMUM_UNCOMPRESSED_LENGTH = 8 MB, throws before inflating) -
+  not reinvented, would be a fake win.
+- [ ] Live plugin-message flood benchmark on the box
 
 ## Milestone 9 - Adaptive Performance Engine (brought forward; first responder shipped)
 

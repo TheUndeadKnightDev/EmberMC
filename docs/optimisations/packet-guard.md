@@ -26,7 +26,7 @@ A per-connection, per-category token-bucket limiter sitting just after Paper's
 limiter in `channelRead0`.
 
 - **Categories** (`PacketCategory`): movement, arm-swing, interact, inventory,
-  book/sign, chat, command, tab-complete, recipe, creative, other. Classified
+  book/sign, chat, command, tab-complete, recipe, creative, plugin-message, other. Classified
   by the packet class's simple name, so no Minecraft type is needed to test it.
 - **Token bucket** (`TokenBucket`) per category: a sustained `per-second` rate
   and a `burst` allowance, so a legitimate flurry (a row of shift-clicks, a
@@ -43,6 +43,10 @@ limiter in `channelRead0`.
 Defaults: movement 200/s (throttle), arm-swing 60/s (drop), book/sign 4/s +
 12 KB (kick), command 15/s (throttle), and so on - a busy survival server's
 headroom, not a tight cap.
+
+Decompression-exhaustion (a packet that inflates to a huge size) is not a
+category here because Paper already caps it: the compression decoder rejects any
+packet claiming to decompress past 8 MB before it inflates. Not reinvented.
 
 ## 4. Compatibility
 

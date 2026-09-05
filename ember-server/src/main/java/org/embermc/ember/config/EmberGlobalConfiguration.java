@@ -146,6 +146,7 @@ public class EmberGlobalConfiguration extends EmberConfigurationPart {
             public Limit tabComplete = new Limit(20, 40, 0, GuardActionValue.DROP);
             public Limit recipe      = new Limit(8, 16, 0, GuardActionValue.THROTTLE);
             public Limit creative    = new Limit(20, 60, 0, GuardActionValue.THROTTLE);
+            public Limit pluginMessage = new Limit(20, 60, 32768, GuardActionValue.THROTTLE);
             public Limit other       = new Limit(500, 1000, 0, GuardActionValue.LOG);
 
             public enum GuardActionValue { LOG, WARN, THROTTLE, DROP, KICK }
@@ -179,6 +180,7 @@ public class EmberGlobalConfiguration extends EmberConfigurationPart {
                     case TAB_COMPLETE -> tabComplete;
                     case RECIPE -> recipe;
                     case CREATIVE -> creative;
+                    case PLUGIN_MESSAGE -> pluginMessage;
                     case OTHER -> other;
                 };
             }

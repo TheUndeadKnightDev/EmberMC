@@ -30,6 +30,7 @@ public enum PacketCategory {
     TAB_COMPLETE,
     RECIPE,
     CREATIVE,
+    PLUGIN_MESSAGE,
     OTHER;
 
     public static final PacketCategory[] VALUES = values();
@@ -69,6 +70,9 @@ public enum PacketCategory {
         }
         if (n.contains("setcreativemodeslot") || n.contains("creativeinventory")) {
             return CREATIVE;
+        }
+        if (n.contains("custompayload") || n.contains("payload") || n.contains("cookieresponse")) {
+            return PLUGIN_MESSAGE;
         }
         return OTHER;
     }

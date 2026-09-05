@@ -23,6 +23,8 @@ class PacketCategoryTest {
         assertEquals(PacketCategory.TAB_COMPLETE, PacketCategory.of("ServerboundCommandSuggestionPacket"));
         assertEquals(PacketCategory.RECIPE, PacketCategory.of("ServerboundPlaceRecipePacket"));
         assertEquals(PacketCategory.CREATIVE, PacketCategory.of("ServerboundSetCreativeModeSlotPacket"));
+        assertEquals(PacketCategory.PLUGIN_MESSAGE, PacketCategory.of("ServerboundCustomPayloadPacket"));
+        assertEquals(PacketCategory.PLUGIN_MESSAGE, PacketCategory.of("ServerboundCookieResponsePacket"));
     }
 
     @Test
