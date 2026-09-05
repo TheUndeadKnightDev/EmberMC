@@ -92,15 +92,23 @@ measured. No milestone proceeds past a broken build.
 
 ## Milestone 5 - Pathfinding and collision
 
-- Short-lived failed-path cache keyed on (entity type, start region, goal,
-  world revision); invalidated on block change in the affected region
-- POI / target search throttling for distant mobs
-- Collision search bounds for oversized entity groups; lag-machine safeguards
-- Tests: cache invalidation; AI still reaches reachable targets
+- [x] Reviewed: Paper already throttles recompute to once per 20 ticks and backs
+  off failed follow-an-entity pathfinds (10 fails, 40-tick skip). Not reinvented.
+- [x] Generalised that backoff to every pathfind, including the positional goals
+  (wander, work-site, flee) Paper leaves uncovered: after failures-before-backoff
+  failed A* searches to the same coarse target, skip it for backoff-ticks; any
+  new or reachable target resets at once. `entities.pathfinding`, reload-safe.
+  Pure `PathfindingBackoff.shouldSkip`, `PathfindingBackoffTest` (5).
+  `/ember entities` "Pathfinds skipped", `ember_pathfinds_skipped` gauge.
+  `docs/optimisations/pathfinding.md`
+- [x] Reviewed: collision is already Paper-bounded (max-entity-collisions);
+  oversized-group lag is handled there and by the item cap. Not reinvented.
+- [ ] Optional: POI/target search throttling for distant mobs; live stuck-crowd
+  benchmark on the box
 
 ## Milestone 6 - Items and XP
 
-- [x] Reviewed: Paper already merges dropped items (radius) and XP orbs (value-grouped) well  - 
+- [x] Reviewed: Paper already merges dropped items (radius) and XP orbs (value-grouped) well;
   not reinvented, to avoid a fake win
 - [x] Live per-chunk item-entity cap (`entities.item-limits`, OFF by default): trims a loaded chunk
   within sweep-seconds instead of only at unload, oldest-first, EntityRemoveEvent fired - an
@@ -142,9 +150,15 @@ measured. No milestone proceeds past a broken build.
 
 ## Milestone 10 - Memory and network
 
-- Allocation profiling of hot paths; bounded caches with metrics
-- Netty allocation review; entity-tracker and metadata packet de-duplication
-- Every buffer-lifetime change documented and tested
+- [x] Idle-RAM trimmer (`memory.idle-trim`, reload-safe): after after-minutes with
+  zero players, one collection lets G1 uncommit unused heap so the process
+  footprint drops. Runs only when empty, at most once per idle stretch. Honest
+  about the AlwaysPreTouch/Xms=Xmx flag set pinning the heap (returns 0 then);
+  uncommit-friendly flags documented. Pure `IdleMemory.dueForTrim`,
+  `IdleMemoryTest` (3). `/ember status` line. `docs/optimisations/idle-memory.md`
+- [ ] Allocation profiling of hot paths; bounded caches with metrics
+- [ ] Netty allocation review; entity-tracker and metadata packet de-duplication
+- [ ] Every buffer-lifetime change documented and tested
 
 ## Milestone 11 - Compatibility testing
 

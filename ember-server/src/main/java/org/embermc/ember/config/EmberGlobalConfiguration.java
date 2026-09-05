@@ -35,6 +35,29 @@ public class EmberGlobalConfiguration extends EmberConfigurationPart {
     public static class Entities extends EmberConfigurationPart {
         public Tiers tiers = new Tiers();
         public ItemLimits itemLimits = new ItemLimits();
+        public Pathfinding pathfinding = new Pathfinding();
+
+        @ConfigSerializable
+        public static class Pathfinding extends EmberConfigurationPart {
+            @Comment("""
+                Stop mobs re-running the A* pathfinder against a target they have already proven they cannot
+                reach. Paper backs off failed attempts to follow an entity; this extends the same bounded rule
+                to every pathfind, including positional ones (wander, work-site and flee goals) that Paper
+                leaves uncovered - the case that hurts is a crowd of mobs stuck at a base wall, each paying a
+                real search on its throttle. After failures-before-backoff failed searches to the same target,
+                further searches to that target are skipped for backoff-ticks; a different or newly reachable
+                target resets it at once, so a mob is never held longer than the window and only on a target it
+                has already failed to reach. Counted in ember_pathfinds_skipped. Reload-safe.""")
+            public boolean enabled = true;
+
+            @Comment("Consecutive failed searches to the same target before the backoff arms. Reload-safe.")
+            @io.papermc.paper.configuration.constraint.Constraints.Min(1)
+            public int failuresBeforeBackoff = 8;
+
+            @Comment("How many ticks the backoff lasts once armed (20 ticks = 1 second). Reload-safe.")
+            @io.papermc.paper.configuration.constraint.Constraints.Min(1)
+            public int backoffTicks = 40;
+        }
 
         @ConfigSerializable
         public static class ItemLimits extends EmberConfigurationPart {

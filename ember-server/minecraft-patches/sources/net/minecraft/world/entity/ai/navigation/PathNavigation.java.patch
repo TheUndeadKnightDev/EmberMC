@@ -1,0 +1,72 @@
+--- a/net/minecraft/world/entity/ai/navigation/PathNavigation.java
++++ b/net/minecraft/world/entity/ai/navigation/PathNavigation.java
+@@ -188,6 +_,25 @@
+             }
+         }
+         // Paper end - EntityPathfindEvent
++        // EmberMC start - generalised pathfinding backoff: skip A* to a target already proven unreachable
++        final long emberTargetKey = emberTargetKey(targets);
++        boolean emberEnabled = false;
++        int emberFailsBefore = 0;
++        int emberBackoffTicks = 0;
++        if (org.embermc.ember.config.EmberConfigurations.isInitialized()) {
++            final var emberPf = org.embermc.ember.config.EmberConfigurations.global().entities.pathfinding;
++            emberEnabled = emberPf.enabled;
++            emberFailsBefore = emberPf.failuresBeforeBackoff;
++            emberBackoffTicks = emberPf.backoffTicks;
++        }
++        if (emberEnabled && emberTargetKey == this.emberLastTargetKey
++            && org.embermc.ember.entity.PathfindingBackoff.shouldSkip(this.emberFailures,
++                net.minecraft.server.MinecraftServer.currentTick - this.emberLastFailTick,
++                emberFailsBefore, emberBackoffTicks)) {
++            org.embermc.ember.entity.PathfindingBackoff.recordSkip();
++            return null;
++        }
++        // EmberMC end - generalised pathfinding backoff
+         ProfilerFiller profiler = Profiler.get();
+         profiler.push("pathfind");
+         BlockPos fromPos = above ? this.mob.blockPosition().above() : this.mob.blockPosition();
+@@ -201,6 +_,19 @@
+             this.resetStuckTimeout();
+         }
+ 
++        // EmberMC start - generalised pathfinding backoff: account for this search
++        if (emberEnabled) {
++            if (path == null) {
++                this.emberFailures = (emberTargetKey == this.emberLastTargetKey) ? this.emberFailures + 1 : 1;
++                this.emberLastTargetKey = emberTargetKey;
++                this.emberLastFailTick = net.minecraft.server.MinecraftServer.currentTick;
++            } else {
++                this.emberFailures = 0;
++                this.emberLastTargetKey = Long.MIN_VALUE;
++            }
++        }
++        // EmberMC end - generalised pathfinding backoff
++
+         return path;
+     }
+ 
+@@ -208,6 +_,23 @@
+     private int lastFailure = 0;
+     private int pathfindFailures = 0;
+     // Paper end - Perf: Optimise pathfinding
++    // EmberMC start - generalised pathfinding backoff (positional targets too)
++    private int emberFailures = 0;
++    private long emberLastFailTick = Long.MIN_VALUE;
++    private long emberLastTargetKey = Long.MIN_VALUE;
++
++    private static long emberTargetKey(final java.util.Set<net.minecraft.core.BlockPos> targets) {
++        // A coarse (4-block) key on one representative target: repeated attempts to
++        // essentially the same unreachable spot share a key; a real move resets it.
++        for (final net.minecraft.core.BlockPos t : targets) {
++            long k = (t.getX() >> 2);
++            k = k * 31 + (t.getY() >> 2);
++            k = k * 31 + (t.getZ() >> 2);
++            return k;
++        }
++        return Long.MIN_VALUE;
++    }
++    // EmberMC end - generalised pathfinding backoff
+ 
+     public boolean moveTo(final double x, final double y, final double z, final double speedModifier) {
+         return this.moveTo(this.createPath(x, y, z, 1), speedModifier);

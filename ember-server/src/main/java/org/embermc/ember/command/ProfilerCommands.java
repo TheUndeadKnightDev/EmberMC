@@ -163,6 +163,10 @@ final class ProfilerCommands {
         sender.sendMessage(row("Last tick", text(org.embermc.ember.entity.EntityTiers.fullLastTick() + " full, "
             + org.embermc.ember.entity.EntityTiers.reducedLastTick() + " reduced", WHITE)
             .append(text("  (reduced = outer ring, inactive-ticked this tick)", ASH))));
+        if (org.embermc.ember.config.EmberConfigurations.global().entities.pathfinding.enabled) {
+            sender.sendMessage(row("Pathfinds skipped", text(String.valueOf(org.embermc.ember.entity.PathfindingBackoff.skipped()), WHITE)
+                .append(text("  (A* searches avoided to unreachable targets, since start)", ASH))));
+        }
         for (final ServerLevel level : MinecraftServer.getServer().getAllLevels()) {
             sender.sendMessage(text("  " + level.getWorld().getName() + ": tier " + level.emberTierLevel.name().toLowerCase(Locale.ROOT)
                 + (level.emberTierLevel == org.embermc.ember.entity.EntityTiers.Level.VANILLA ? "" : ", full ring "

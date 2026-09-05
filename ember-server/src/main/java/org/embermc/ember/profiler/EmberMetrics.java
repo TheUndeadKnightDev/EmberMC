@@ -31,6 +31,7 @@ public final class EmberMetrics {
         register("ember_profiler_attributing", () -> EmberProfiler.attributing ? 1 : 0);
         register("ember_packets_blocked", org.embermc.ember.security.PacketGuard::totalBlocked);
         register("ember_items_removed", org.embermc.ember.entity.ItemLimits::removed);
+        register("ember_pathfinds_skipped", org.embermc.ember.entity.PathfindingBackoff::skipped);
         register("ember_adaptive_level", () -> org.embermc.ember.adaptive.AdaptiveRuntime.level().ordinal());
         register("ember_adaptive_changes", org.embermc.ember.adaptive.AdaptiveRuntime::changes);
         register("ember_entities_full_tick", org.embermc.ember.entity.EntityTiers::fullLastTick);
