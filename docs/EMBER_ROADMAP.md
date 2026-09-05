@@ -72,6 +72,9 @@ measured. No milestone proceeds past a broken build.
 - [x] Spike watchdog: threshold, cooldown, GC delta, per-phase and per-world breakdown of the
   offending tick, heaviest plugins when a session runs, report file + one console line
 - [x] Metrics registry of `ember_*` gauges (suppliers, free when idle)
+- [x] First measured win: Alternate Current redstone default (BENCHMARKS.md R1, 11× on block ticks)
+- [x] `/ember tune show|apply|revert <preset>`: Paper/Spigot/Bukkit performance keys with backups,
+  visible-effect notes and live safety guards
 - [ ] Opt-in Prometheus-style endpoint over the same gauges
 - [ ] Tests: ring statistics, phase accounting sums to the tick, watchdog cooldown
 

@@ -32,6 +32,24 @@ Then: implement → build → test → profile → benchmark → document → co
 change whose benchmark does not show the expected improvement is reverted, not
 kept because it "should" help.
 
+## What has shipped
+
+**Alternate Current by default** (Milestone 3). Paper ships a redstone engine
+that is 11× cheaper on a dust plane (BENCHMARKS.md R1) and leaves it off.
+EmberMC turns it on for new installs; `misc.redstone-implementation: VANILLA`
+restores upstream behaviour.
+
+**The tuner** (`/ember tune`, Milestone 3). Paper, Spigot and Bukkit already
+expose the levers every optimisation guide tells administrators to hand-edit:
+activation and tracking ranges, villager tick rates, hopper checks, spawn
+limits, collision caps, explosion optimisation. `/ember tune show <preset>`
+lists what a preset would change and what a player could notice;
+`/ember tune apply` writes it with backups; `/ember tune revert` writes upstream
+defaults back. A change whose safety depends on the plugin set - disabling the
+hopper move event - is refused while any plugin listens for it. These values
+are settled practice, not EmberMC measurements; the profiler is there to
+measure them on your server.
+
 ## Standing rules
 
 - Never remove vanilla behaviour for a benchmark number. Change *when* and

@@ -1,8 +1,28 @@
 # Benchmarks
 
-**There are no EmberMC performance numbers yet.** This file exists so the
-method is agreed before the first optimisation lands, and so no claim is ever
-published without the run that supports it.
+This file fixes the method before results are claimed, and records every
+result with the run that produced it. There is one so far.
+
+## Results
+
+### R1 — Redstone engine: Vanilla vs Alternate Current (2026-09-05)
+
+| | block-ticks phase, mean | p95 |
+| --- | --- | --- |
+| Paper default (`VANILLA`) | 2.20 ms | 9.25 ms |
+| Alternate Current | **0.20 ms** | **0.74 ms** |
+
+**Rig.** 31×31 plane of redstone dust (961 blocks) on smooth stone at y=101,
+driven by a two-observer clock feeding one corner, area force-loaded, no
+players. **Server.** EmberMC `1704ed8d8` on the `ember-folia` box (4 vCPU
+share, 3.5 GB heap, Temurin 25). **Method.** `/ember profiler` 5-second mean
+and p95 of the `block ticks` phase, read 12 s after the rig was built; engine
+switched with `misc.redstone-implementation` + `/paper reload` on the same
+running server; read again 12 s later. **Caveats.** One run, one rig shape,
+one machine; Alternate Current is Paper's own engine, EmberMC's contribution is
+making it the default. It is a switch worth flipping, not an EmberMC invention.
+
+## Rules
 
 ## Rules
 

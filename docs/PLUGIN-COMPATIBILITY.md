@@ -23,6 +23,8 @@ register below with a compatibility toggle.
 | --- | --- | --- | --- |
 | M1 | Server brand and name are EmberMC | `Bukkit.getName()`, `/version`, manifest | none — this is the point |
 | M1 | `/version` does not check PaperMC for updates | `/version` output | none |
+| M3 | Redstone engine defaults to Alternate Current on new installs | Update order in rare edge-case contraptions; measured 11x cheaper block-ticks phase | `misc.redstone-implementation: VANILLA` in `paper-world-defaults.yml` (Paper's own key). Existing installs keep whatever their file says |
+| M3 | `/ember tune apply <preset>` writes Paper/Spigot/Bukkit performance keys | Only what the plan shows; each line names the visible effect; hopper move-event is refused while any plugin listens | `/ember tune revert` writes upstream defaults; every write is backed up to `ember-backups/` |
 
 Nothing else yet. Milestones 4–10 will add rows here as they land.
 

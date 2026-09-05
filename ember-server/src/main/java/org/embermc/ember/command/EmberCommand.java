@@ -43,7 +43,7 @@ public final class EmberCommand extends Command {
     private static final TextColor ASH = TextColor.color(0x9E9E9E);
     private static final TextColor SPARK = TextColor.color(0xFFCA28);
 
-    private static final List<String> SUBCOMMANDS = List.of("status", "version", "config", "reload", "profiler", "plugins", "worlds", "entities", "chunks", "metrics");
+    private static final List<String> SUBCOMMANDS = List.of("status", "version", "config", "reload", "profiler", "plugins", "worlds", "entities", "chunks", "metrics", "tune");
 
     public EmberCommand(final String name) {
         super(name);
@@ -81,6 +81,7 @@ public final class EmberCommand extends Command {
             case "entities" -> { if (hasSub(sender, "entities")) ProfilerCommands.entities(sender); }
             case "chunks" -> { if (hasSub(sender, "chunks")) ProfilerCommands.chunks(sender); }
             case "metrics" -> { if (hasSub(sender, "metrics")) ProfilerCommands.metrics(sender); }
+            case "tune" -> { if (hasSub(sender, "tune")) TuneCommands.tune(sender, java.util.Arrays.copyOfRange(args, 1, args.length)); }
             default -> sender.sendMessage(text(this.usageMessage, NamedTextColor.RED));
         }
         return true;
@@ -219,6 +220,12 @@ public final class EmberCommand extends Command {
     public List<String> tabComplete(final CommandSender sender, final String alias, final String[] args, final @Nullable Location location) {
         if (args.length == 2 && "profiler".equalsIgnoreCase(args[0])) {
             return List.of("start", "stop");
+        }
+        if (args.length == 2 && "tune".equalsIgnoreCase(args[0])) {
+            return List.of("show", "apply", "revert", "backups", "restore");
+        }
+        if (args.length == 3 && "tune".equalsIgnoreCase(args[0])) {
+            return List.of("vanilla", "balanced", "performance", "extreme");
         }
         if (args.length != 1) {
             return List.of();
