@@ -42,3 +42,6 @@ Thumbs.db
 
 *.jar
 test-plugin.settings.gradle.kts
+
+# patch rejects
+*.rej
