@@ -9,7 +9,7 @@ knows how these work.
 | --- | --- |
 | `config/ember-global.yml` | the server |
 | `config/ember-world-defaults.yml` | every world, unless a world overrides a key |
-| `<world>/ember-world.yml` | one world's overrides — only the keys it changes |
+| `<world>/ember-world.yml` | one world's overrides — only the keys it changes. Lives next to Paper's `paper-world.yml`, e.g. `world/dimensions/minecraft/overworld/ember-world.yml` on current world layouts |
 
 Paper's own files are untouched. EmberMC never reads or writes
 `paper-global.yml`.
@@ -47,11 +47,11 @@ means. Anything you set explicitly wins over the preset.
 ```yaml
 _version: 1
 
-# Which set of defaults this server starts from: vanilla, balanced, performance or extreme.
+# Which set of defaults this server starts from: VANILLA, BALANCED, PERFORMANCE or EXTREME (case-insensitive).
 # A preset only decides what an unset option means; anything you set explicitly wins.
 # Systems arriving in later milestones read this when their own options are left blank.
 # Restart-only.
-profile: balanced
+profile: BALANCED
 
 console:
   # Print the EmberMC box at startup. Restart-only, since it is printed once at boot.
@@ -60,7 +60,7 @@ console:
   # Panel consoles (Pterodactyl and friends) render truecolor; a plain terminal that shows
   # garbage wants indexed-16 or none. Log files never contain colour either way.
   # Restart-only.
-  color-level: truecolor
+  color-level: TRUECOLOR
 
 status:
   # Show "live heap after last GC" in /ember status next to used heap.
@@ -86,17 +86,17 @@ entities:
   # while the main survival world stays balanced.
   # NOT YET APPLIED: the entity engine arrives in Milestone 4. The value is read, validated
   # and shown in /ember config today so world files can be prepared ahead of it.
-  optimization: inherit
+  optimization: INHERIT
 ```
 
 A world file starts empty apart from `_version`. Add only what that world
 changes:
 
 ```yaml
-# world_resource/ember-world.yml
+# world_resource/dimensions/minecraft/overworld/ember-world.yml
 _version: 1
 entities:
-  optimization: extreme
+  optimization: EXTREME
 ```
 
 ## Presets
