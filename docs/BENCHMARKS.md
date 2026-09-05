@@ -72,6 +72,32 @@ farm; one machine. It shows the mechanism working at the predicted scale, not a
 guarantee for every workload - which is what the profiler is for on your own
 server.
 
+### R4 - Entity tiers via the built-in `/ember bench`, ~8,000 mobs (2026-09-05)
+
+Reproducing R3 at higher density with the shipped command instead of by hand.
+One player anchoring ~8,000 ground-standing zombies (AI on, spread across the
+activation disc) on the `ember-folia` box, EmberMC `26.2-DEV-3a6a3de`.
+`/ember bench 10` cycles the tier and reads the entity phase over a 10 s window
+each; `vanilla` is the tiers off (this box behaving as plain Paper), same load,
+seconds apart.
+
+| Tier | entity phase (10 s mean) | vs vanilla |
+| --- | --- | --- |
+| **vanilla** (= regular Paper) | 51.09 ms | baseline |
+| balanced | 17.99 ms | **65% lower** |
+| performance | 9.06 ms | **82% lower** |
+| extreme | 9.07 ms | **82% lower** |
+
+At this density vanilla is over the 50 ms tick budget (the server dipping under
+20 TPS); the tiers pull the entity phase back to ~9 ms with room to spare.
+Performance and extreme converge because, with mobs this dense, both throttle
+nearly the whole outer ring. Reproduce it on your own load with `/ember bench`;
+the `vanilla` row is your own Paper baseline, not a figure from another machine.
+
+**Caveats.** One run; a dense disc of wandering zombies, not a real farm; one
+machine. The point is that the mechanism, and the built-in tool that measures it,
+both do what they say.
+
 ## Rules
 
 ## Rules
