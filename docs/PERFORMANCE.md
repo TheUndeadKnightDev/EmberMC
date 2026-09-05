@@ -1,9 +1,13 @@
 # Performance
 
 **Status: EmberMC has made no performance changes yet.** The current build is
-Paper `a2a42c5b` with EmberMC branding and the `/ember` command. It performs
-exactly as that Paper build performs, and nothing in this document is a claim
-about a measured result. See BENCHMARKS.md for how results will be produced.
+Paper `a2a42c5b` with EmberMC branding, configuration, and the profiler. It
+performs as that Paper build performs, and nothing in this document is a claim
+about a measured result. What it does have, since Milestone 3, is the
+instrument the rest of this document depends on: always-on tick-phase timing
+(about a microsecond a tick), opt-in per-plugin attribution, and a spike
+watchdog that writes down what a bad tick was doing. See BENCHMARKS.md for how
+results will be produced.
 
 This document is the standing rule set for every optimisation that follows.
 

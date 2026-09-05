@@ -71,7 +71,7 @@ public final class EmberBanner {
         }
         return ColorLevel.TRUE_COLOR;
     }
-    private static final int WIDTH = 48;
+    private static final int WIDTH = 60;
 
     private EmberBanner() {
     }
@@ -101,6 +101,7 @@ public final class EmberBanner {
             row(field("Minecraft", info.minecraftVersionName())),
             row(field("Upstream", upstream + " (compatible)")),
             row(field("Java", Runtime.version().toString())),
+            row(field("Profiler", "phases timed · plugins off (/ember profiler start)")),
             bottom,
         };
 

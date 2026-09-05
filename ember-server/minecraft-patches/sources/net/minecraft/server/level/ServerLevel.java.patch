@@ -1,9 +1,10 @@
 --- a/net/minecraft/server/level/ServerLevel.java
 +++ b/net/minecraft/server/level/ServerLevel.java
-@@ -183,6 +_,12 @@
+@@ -183,6 +_,13 @@
  import org.slf4j.Logger;
  
  public class ServerLevel extends Level implements WorldGenLevel, ServerEntityGetter, ca.spottedleaf.moonrise.patches.chunk_system.level.ChunkSystemServerLevel, ca.spottedleaf.moonrise.patches.chunk_system.level.ChunkSystemLevelReader, ca.spottedleaf.moonrise.patches.chunk_tick_iteration.ChunkTickServerLevel { // Paper - rewrite chunk system // Paper - chunk tick iteration
++    public final org.embermc.ember.profiler.WorldTimes emberTimes = new org.embermc.ember.profiler.WorldTimes(); // Ember - profiler: this world's share of the tick
 +    // Ember start - per-world config
 +    private org.embermc.ember.config.EmberWorldConfiguration emberConfig;
 +    public org.embermc.ember.config.EmberWorldConfiguration emberConfig() {
@@ -21,3 +22,51 @@
          this.weatherData.setLevel(this);
          this.typeKey = typeKey;
          this.bukkitName = loadedWorldData.bukkitName();
+@@ -844,9 +_,11 @@
+         if (!this.isDebug() && runs) {
+             long tick = this.getGameTime();
+             profiler.push("blockTicks");
++            final long emberBlockTicks = org.embermc.ember.profiler.EmberProfiler.start(); // Ember - profiler
+             this.blockTicks.tick(tick, paperConfig().environment.maxBlockTicks, this::tickBlock); // Paper - configurable max block ticks
+             profiler.popPush("fluidTicks");
+             this.fluidTicks.tick(tick, paperConfig().environment.maxFluidTicks, this::tickFluid); // Paper - configurable max fluid ticks
++            org.embermc.ember.profiler.EmberProfiler.worldEnd(this, org.embermc.ember.profiler.Phase.BLOCK_TICKS, emberBlockTicks); // Ember - profiler
+             profiler.pop();
+         }
+ 
+@@ -856,10 +_,14 @@
+         }
+ 
+         profiler.popPush("chunkSource");
++        final long emberChunks = org.embermc.ember.profiler.EmberProfiler.start(); // Ember - profiler
+         this.getChunkSource().tick(haveTime, true);
++        org.embermc.ember.profiler.EmberProfiler.worldEnd(this, org.embermc.ember.profiler.Phase.CHUNKS, emberChunks); // Ember - profiler
+         profiler.popPush("blockEvents");
+         if (runs) {
++            final long emberBlockEvents = org.embermc.ember.profiler.EmberProfiler.start(); // Ember - profiler
+             this.runBlockEvents();
++            org.embermc.ember.profiler.EmberProfiler.worldEnd(this, org.embermc.ember.profiler.Phase.BLOCK_EVENTS, emberBlockEvents); // Ember - profiler
+         }
+ 
+         this.handlingTick = false;
+@@ -881,6 +_,7 @@
+                 profiler.pop();
+             }
+ 
++            final long emberEntities = org.embermc.ember.profiler.EmberProfiler.start(); // Ember - profiler
+             io.papermc.paper.entity.activation.ActivationRange.activateEntities(this); // Paper - EAR
+             this.entityTickList
+                 .forEach(
+@@ -908,9 +_,12 @@
+                         }
+                     }
+                 );
++            org.embermc.ember.profiler.EmberProfiler.worldEnd(this, org.embermc.ember.profiler.Phase.ENTITIES, emberEntities); // Ember - profiler
+             if (this.paperConfig().unsupportedSettings.ticking.blockEntities) { // Paper - option to disable ticking
+             profiler.popPush("blockEntities");
++            final long emberBlockEntities = org.embermc.ember.profiler.EmberProfiler.start(); // Ember - profiler
+             this.tickBlockEntities();
++            org.embermc.ember.profiler.EmberProfiler.worldEnd(this, org.embermc.ember.profiler.Phase.BLOCK_ENTITIES, emberBlockEntities); // Ember - profiler
+             profiler.pop();
+             } // Paper - option to disable ticking
+             this.spigotConfig.currentPrimedTnt = 0; // Spigot

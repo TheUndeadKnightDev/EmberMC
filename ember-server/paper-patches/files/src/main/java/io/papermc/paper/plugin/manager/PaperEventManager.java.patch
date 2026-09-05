@@ -1,0 +1,21 @@
+--- a/src/main/java/io/papermc/paper/plugin/manager/PaperEventManager.java
++++ b/src/main/java/io/papermc/paper/plugin/manager/PaperEventManager.java
+@@ -51,7 +_,18 @@
+             }
+ 
+             try {
++                // Ember start - profiler: attribute handler time to the plugin, only while a session runs; sync events are main-thread
++                if (org.embermc.ember.profiler.EmberProfiler.attributing && !event.isAsynchronous()) {
++                    final long emberStart = System.nanoTime();
++                    try {
++                        registration.callEvent(event);
++                    } finally {
++                        org.embermc.ember.profiler.PluginTimes.event(registration.getPlugin(), System.nanoTime() - emberStart);
++                    }
++                } else {
+                 registration.callEvent(event);
++                }
++                // Ember end - profiler
+             } catch (AuthorNagException ex) {
+                 Plugin plugin = registration.getPlugin();
+ 

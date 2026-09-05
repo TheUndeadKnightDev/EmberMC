@@ -1,5 +1,24 @@
 --- a/src/main/java/org/bukkit/craftbukkit/scheduler/CraftScheduler.java
 +++ b/src/main/java/org/bukkit/craftbukkit/scheduler/CraftScheduler.java
+@@ -471,7 +_,18 @@
+             if (task.isSync()) {
+                 this.currentTask = task;
+                 try {
++                    // Ember start - profiler: attribute sync task time to the plugin, only while a session runs
++                    if (org.embermc.ember.profiler.EmberProfiler.attributing) {
++                        final long emberStart = System.nanoTime();
++                        try {
++                            task.run();
++                        } finally {
++                            org.embermc.ember.profiler.PluginTimes.task(task.getOwner(), System.nanoTime() - emberStart);
++                        }
++                    } else {
+                     task.run();
++                    }
++                    // Ember end - profiler
+                 } catch (final Throwable throwable) {
+                     // Paper start
+                     final String logMessage = String.format(
 @@ -491,7 +_,7 @@
                  this.parsePending();
              } else {

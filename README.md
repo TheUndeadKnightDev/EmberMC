@@ -19,7 +19,9 @@ doing.
 
 ## Status
 
-Milestone 1 — fork infrastructure, branding and `/ember status`. See
+Milestones 1–3 — fork infrastructure and branding, the configuration framework,
+and the profiler (always-on phase timing, opt-in plugin attribution, spike
+watchdog). No performance changes yet, by design: the instrument comes first. See
 [docs/EMBER_ROADMAP.md](docs/EMBER_ROADMAP.md) for what comes next and in what
 order, and why performance claims are never made without a benchmark.
 

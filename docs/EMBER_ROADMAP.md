@@ -60,15 +60,20 @@ measured. No milestone proceeds past a broken build.
   "read now, applied from Milestone 4"
 - [ ] Tests: parsing, validation, migration (with the first transformation)
 
-## Milestone 3 — Profiler and instrumentation
+## Milestone 3 — Profiler and instrumentation ✅
 
-- Tick-phase timing hooks (world tick, entity tick, block entity tick, chunk
-  tick, scheduler, network flush) that cost nothing when the profiler is off
-- `/ember profiler [start|stop]`, `/ember entities`, `/ember chunks`,
-  `/ember worlds`, `/ember plugins` (tick cost attribution with honest caveats)
-- Lag-spike watchdog: capture context automatically when a tick exceeds a
-  threshold, write an administrator-readable report
-- Internal metrics registry; optional Prometheus-style endpoint (opt-in)
+- [x] Always-on phase timing: scheduler, block ticks, chunks, block events, entities,
+  block entities, connections, console commands, other — one `nanoTime` + one add per hook,
+  ~40 hooks a tick with three worlds, per-world and per-tick 60 s rings, no per-tick allocation
+- [x] Opt-in plugin attribution (event handlers + sync tasks) behind one volatile flag per site;
+  sessions with auto-stop
+- [x] `/ember profiler [start [s]|stop]`, `/ember plugins`, `/ember worlds`, `/ember entities`,
+  `/ember chunks`, `/ember metrics` — every view says what it does not measure
+- [x] Spike watchdog: threshold, cooldown, GC delta, per-phase and per-world breakdown of the
+  offending tick, heaviest plugins when a session runs, report file + one console line
+- [x] Metrics registry of `ember_*` gauges (suppliers, free when idle)
+- [ ] Opt-in Prometheus-style endpoint over the same gauges
+- [ ] Tests: ring statistics, phase accounting sums to the tick, watchdog cooldown
 
 ## Milestone 4 — Entity engine
 

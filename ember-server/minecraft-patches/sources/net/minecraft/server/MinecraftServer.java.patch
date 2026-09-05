@@ -9,3 +9,49 @@
              }
              // Paper end - Improve outdated version checking
  
+@@ -1614,6 +_,7 @@
+         }
+ 
+         this.server.spark.tickStart(); // Paper - spark
++        org.embermc.ember.profiler.EmberProfiler.tickStart(); // Ember - profiler: tick begins
+         new com.destroystokyo.paper.event.server.ServerTickStartEvent(this.tickCount+1).callEvent(); // Paper - Server Tick Events
+         this.tickCount++;
+         this.tickRateManager.tick();
+@@ -1657,6 +_,7 @@
+         long remaining = this.nextTickTimeNanos - endTime;
+         new com.destroystokyo.paper.event.server.ServerTickEndEvent(this.tickCount, ((double)(endTime - this.currentTickStart) / 1000000D), remaining).callEvent();
+         // Paper end - Server Tick Events
++        org.embermc.ember.profiler.EmberProfiler.tickEnd(); // Ember - profiler: tick ends, spike watchdog runs
+         this.server.spark.tickEnd(((double)(endTime - this.currentTickStart) / 1000000D)); // Paper - spark
+         profiler.push("tallying");
+         long tickTime = Util.getNanos() - nano;
+@@ -1764,7 +_,9 @@
+     protected void tickChildren(final BooleanSupplier haveTime) {
+         ProfilerFiller profiler = Profiler.get();
+         this.getPlayerList().getPlayers().forEach(playerx -> playerx.connection.suspendFlushing());
++        final long emberScheduler = org.embermc.ember.profiler.EmberProfiler.start(); // Ember - profiler
+         this.server.getScheduler().mainThreadHeartbeat(); // CraftBukkit
++        org.embermc.ember.profiler.EmberProfiler.end(org.embermc.ember.profiler.Phase.SCHEDULER, emberScheduler); // Ember - profiler
+         // Paper start - optimise Folia entity scheduler
+         ((io.papermc.paper.threadedregions.scheduler.FoliaGlobalRegionScheduler)org.bukkit.Bukkit.getGlobalRegionScheduler()).tick();
+         for (io.papermc.paper.threadedregions.EntityScheduler scheduler : this.entitySchedulerTickList.getAllSchedulers()) {
+@@ -1820,7 +_,9 @@
+             profiler.push("tick");
+ 
+             try {
++                final long emberWorld = org.embermc.ember.profiler.EmberProfiler.start(); // Ember - profiler
+                 level.tick(haveTime);
++                org.embermc.ember.profiler.EmberProfiler.worldTickEnd(level, emberWorld); // Ember - profiler
+             } catch (Throwable t) {
+                 CrashReport report = CrashReport.forThrowable(t, "Exception ticking world");
+                 level.fillReportDetails(report);
+@@ -1871,7 +_,9 @@
+     }
+ 
+     protected void tickConnection() {
++        final long emberConnections = org.embermc.ember.profiler.EmberProfiler.start(); // Ember - profiler
+         this.getConnection().tick();
++        org.embermc.ember.profiler.EmberProfiler.end(org.embermc.ember.profiler.Phase.CONNECTIONS, emberConnections); // Ember - profiler
+     }
+ 
+     public void forceGameTimeSynchronization() {

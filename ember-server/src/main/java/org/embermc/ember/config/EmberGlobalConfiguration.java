@@ -57,6 +57,33 @@ public class EmberGlobalConfiguration extends EmberConfigurationPart {
         public boolean showLiveHeap = true;
     }
 
+    public Profiler profiler = new Profiler();
+
+    @ConfigSerializable
+    public static class Profiler extends EmberConfigurationPart {
+        @Comment("""
+            A tick longer than this, in milliseconds, is a spike: the watchdog writes a report of what
+            that tick was doing (phases, worlds, GC, and plugins if a session is running) and logs one
+            line. A normal tick is 50 ms; 100 is a clear spike without being noisy. Reload-safe.""")
+        @io.papermc.paper.configuration.constraint.Constraints.Min(20)
+        public int spikeThresholdMs = 100;
+
+        @Comment("At most one spike report per this many seconds, so a sustained overload produces a few files, not thousands. Reload-safe.")
+        @io.papermc.paper.configuration.constraint.Constraints.Min(1)
+        public int spikeReportCooldownSeconds = 30;
+
+        @Comment("How many spike reports to keep on disk; the oldest are deleted. Reload-safe.")
+        @io.papermc.paper.configuration.constraint.Constraints.Min(1)
+        public int keepSpikeReports = 50;
+
+        @Comment("Where spike reports are written, relative to the server directory. Reload-safe.")
+        public String spikeReportsDir = "ember-reports";
+
+        @Comment("How long /ember profiler start runs when no duration is given, in seconds. 0 means until stopped. Reload-safe.")
+        @io.papermc.paper.configuration.constraint.Constraints.Min(0)
+        public int defaultSessionSeconds = 60;
+    }
+
     public UpdateChecker updateChecker = new UpdateChecker();
 
     @ConfigSerializable

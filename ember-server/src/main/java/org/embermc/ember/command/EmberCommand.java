@@ -43,7 +43,7 @@ public final class EmberCommand extends Command {
     private static final TextColor ASH = TextColor.color(0x9E9E9E);
     private static final TextColor SPARK = TextColor.color(0xFFCA28);
 
-    private static final List<String> SUBCOMMANDS = List.of("status", "version", "config", "reload");
+    private static final List<String> SUBCOMMANDS = List.of("status", "version", "config", "reload", "profiler", "plugins", "worlds", "entities", "chunks", "metrics");
 
     public EmberCommand(final String name) {
         super(name);
@@ -75,6 +75,12 @@ public final class EmberCommand extends Command {
             case "version", "ver" -> version(sender);
             case "config" -> config(sender);
             case "reload" -> reload(sender);
+            case "profiler" -> { if (hasSub(sender, "profiler")) ProfilerCommands.profiler(sender, java.util.Arrays.copyOfRange(args, 1, args.length)); }
+            case "plugins" -> { if (hasSub(sender, "plugins")) ProfilerCommands.plugins(sender); }
+            case "worlds" -> { if (hasSub(sender, "worlds")) ProfilerCommands.worlds(sender); }
+            case "entities" -> { if (hasSub(sender, "entities")) ProfilerCommands.entities(sender); }
+            case "chunks" -> { if (hasSub(sender, "chunks")) ProfilerCommands.chunks(sender); }
+            case "metrics" -> { if (hasSub(sender, "metrics")) ProfilerCommands.metrics(sender); }
             default -> sender.sendMessage(text(this.usageMessage, NamedTextColor.RED));
         }
         return true;
@@ -211,6 +217,9 @@ public final class EmberCommand extends Command {
 
     @Override
     public List<String> tabComplete(final CommandSender sender, final String alias, final String[] args, final @Nullable Location location) {
+        if (args.length == 2 && "profiler".equalsIgnoreCase(args[0])) {
+            return List.of("start", "stop");
+        }
         if (args.length != 1) {
             return List.of();
         }
