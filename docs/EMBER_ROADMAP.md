@@ -118,11 +118,17 @@ measured. No milestone proceeds past a broken build.
 
 ## Milestone 7 - Chunk engine
 
-- Chunk-load rate limiting per player with queueing, tuned so legitimate
-  exploration and elytra travel are never blocked
-- Teleport and portal chunk-load smoothing
-- Diagnostics for unnecessary chunk retention
-- Benchmarks: rapid elytra travel, mass teleport, generation stress
+- [x] Reviewed: Paper's Moonrise chunk system already does async chunk saves,
+  per-player concurrent load/generate limits (auto-tuned), autosave spread, and
+  delayed unload. Load rate-limiting and save-smoothing are NOT reinvented - that
+  would be a fake win. The Tuner already sets the knobs worth changing.
+- [x] Chunk retention diagnostics (`chunks.retention-diagnostics`): `/ember chunks`
+  now shows loaded / ticking / forced / plugin-held per world and names the
+  plugins holding tickets; a rate-limited warning fires when one world passes
+  `warn-threshold`. Read-only - never force-unloads a plugin's chunk. Gauges
+  `ember_chunks_plugin_held`, `ember_chunks_force_loaded`. Pure
+  `ChunkInsights.shouldWarn`, `ChunkInsightsTest` (3). `docs/optimisations/chunk-engine.md`
+- [ ] Optional: portal/teleport pre-load hint; live elytra/mass-teleport read-out
 
 ## Milestone 8 - Packet Guard and exploit protection (core shipped)
 

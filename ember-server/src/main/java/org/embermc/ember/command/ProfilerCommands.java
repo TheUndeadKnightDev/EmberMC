@@ -189,14 +189,36 @@ final class ProfilerCommands {
 
     static void chunks(final CommandSender sender) {
         sender.sendMessage(header("Chunks"));
-        sender.sendMessage(text("  World                    loaded   players   chunk phase ms (5s mean)", ASH));
+        sender.sendMessage(text("  World                  loaded  ticking   forced  plugin  chunk ms", ASH));
+        final boolean diag = EmberConfigurations.global().chunks.retentionDiagnostics;
         for (final ServerLevel level : MinecraftServer.getServer().getAllLevels()) {
             final World w = level.getWorld();
+            final var wc = org.embermc.ember.chunk.ChunkInsights.of(w);
             sender.sendMessage(text()
-                .append(text(String.format("  %-24s", trim(w.getName(), 24)), WHITE))
-                .append(text(String.format("%7d%10d", w.getChunkCount(), w.getPlayers().size()), ASH))
-                .append(text(String.format("%12.2f", level.emberTimes.ring(Phase.CHUNKS).stats(100).meanMs()), ASH))
+                .append(text(String.format("  %-22s", trim(w.getName(), 22)), WHITE))
+                .append(text(String.format("%7d%9d", wc.loaded(), wc.ticking()), ASH))
+                .append(text(String.format("%9d", wc.forceLoaded()), wc.forceLoaded() > 0 ? WHITE : ASH))
+                .append(text(String.format("%8d", wc.pluginHeld()), wc.pluginHeld() > 0 ? NamedTextColor.YELLOW : ASH))
+                .append(text(String.format("%10.2f", level.emberTimes.ring(Phase.CHUNKS).stats(100).meanMs()), ASH))
                 .build());
+        }
+        sender.sendMessage(text("  loaded = all in memory, ticking = fully ticking, forced = /forceload, plugin = plugin chunk tickets.", ASH));
+        if (diag) {
+            boolean any = false;
+            for (final ServerLevel level : MinecraftServer.getServer().getAllLevels()) {
+                final World w = level.getWorld();
+                final var holders = org.embermc.ember.chunk.ChunkInsights.topHolders(w, 5);
+                if (holders.isEmpty()) {
+                    continue;
+                }
+                any = true;
+                sender.sendMessage(row("Held in " + w.getName(), text(holders.stream()
+                    .map(e -> e.getKey().getName() + " (" + e.getValue() + ")")
+                    .reduce((a, b) -> a + ", " + b).orElse("none"), WHITE)));
+            }
+            if (!any) {
+                sender.sendMessage(row("Plugin-held", text("none - no plugin is keeping chunks loaded", ASH)));
+            }
         }
     }
 

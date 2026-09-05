@@ -97,6 +97,29 @@ public class EmberGlobalConfiguration extends EmberConfigurationPart {
         }
     }
 
+    public Chunks chunks = new Chunks();
+
+    @ConfigSerializable
+    public static class Chunks extends EmberConfigurationPart {
+        @Comment("""
+            Report what is keeping chunks loaded, so unnecessary retention is visible. Paper's chunk system
+            already loads, generates and saves chunks well (async saves, per-player concurrent load and
+            generate limits, a delayed unload); what it does not surface is which plugin or force-load is
+            holding chunks loaded, which is the usual cause of a world that never shrinks and idles heavy.
+            /ember chunks shows loaded, ticking, force-loaded and plugin-held counts per world, and when a
+            world's plugin-held chunks pass warn-threshold a single rate-limited line names the worst
+            offenders. Read-only: EmberMC never force-unloads a chunk a plugin asked for. Reload-safe.""")
+        public boolean retentionDiagnostics = true;
+
+        @Comment("Log a warning when one world has more than this many plugin-ticket-held chunks. 0 disables the warning (the /ember chunks read-out stays). Reload-safe.")
+        @io.papermc.paper.configuration.constraint.Constraints.Min(0)
+        public int warnThreshold = 400;
+
+        @Comment("At most one retention warning per this many seconds. Reload-safe.")
+        @io.papermc.paper.configuration.constraint.Constraints.Min(1)
+        public int warnCooldownSeconds = 300;
+    }
+
     public Security security = new Security();
 
     @ConfigSerializable
