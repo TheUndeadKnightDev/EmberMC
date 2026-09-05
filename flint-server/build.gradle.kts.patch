@@ -56,7 +56,7 @@
      implementation("ca.spottedleaf:leafpile:1.2.0")
      implementation("org.jline:jline-terminal-ffm:3.27.1") // use ffm on java 22+
      implementation("org.jline:jline-terminal-jni:3.27.1") // fall back to jni on java 21
-@@ -164,21 +_,21 @@
+@@ -164,21 +_,22 @@
          val git = Git(rootProject.layout.projectDirectory.path)
          val mcVersion = rootProject.providers.gradleProperty("mcVersion").get()
          val build = System.getenv("BUILD_NUMBER") ?: null
@@ -81,6 +81,7 @@
 +            "Specification-Vendor" to "FlintMC", // Flint - brand
 +            "Brand-Id" to "flintmc:flint", // Flint - brand
 +            "Brand-Name" to "FlintMC", // Flint - brand
++            "Upstream-Paper-Commit" to rootProject.providers.gradleProperty("paperCommit").get(), // Flint - shown in the startup banner
              "Build-Number" to (build ?: ""),
              "Build-Time" to buildTime.toString(),
              "Git-Branch" to gitBranch,

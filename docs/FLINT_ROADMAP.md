@@ -43,9 +43,10 @@ measured. No milestone proceeds past a broken build.
 - [x] `/flint status` — TPS, MSPT, players, entities, block entities, chunks, heap
 - [x] `/flint version`
 - [x] `flint.command.*` permissions
-- [x] Startup banner
+- [x] Startup banner (true-colour ANSI via Adventure; plain in latest.log)
 - [x] Docs: README, BUILDING, UPDATING-UPSTREAM, LICENSE, DISTRIBUTION, this roadmap
-- [ ] Test server launched, plugin-compatibility baseline recorded (see PLUGIN-COMPATIBILITY.md)
+- [x] Test server launched on a real box: Ember suite + floodgate + packetevents load, `/flint status` answers
+- [ ] Full plugin-compatibility matrix recorded (see PLUGIN-COMPATIBILITY.md)
 
 ## Milestone 2 — Configuration framework
 

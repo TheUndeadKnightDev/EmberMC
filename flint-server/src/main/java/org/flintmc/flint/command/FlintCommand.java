@@ -100,6 +100,17 @@ public final class FlintCommand extends Command {
         final long usedMb = (rt.totalMemory() - rt.freeMemory()) / (1024 * 1024);
         final long maxMb = rt.maxMemory() / (1024 * 1024);
 
+        // "Used" counts garbage the collector has not bothered with yet, and on a
+        // server started with AlwaysPreTouch it looks alarming while meaning
+        // nothing. Live-after-GC is the footprint. Read from the pools' post-GC
+        // usage, which the JVM keeps for free; no collection is forced here.
+        long liveMb = 0;
+        for (final java.lang.management.MemoryPoolMXBean pool : java.lang.management.ManagementFactory.getMemoryPoolMXBeans()) {
+            if (pool.getType() == java.lang.management.MemoryType.HEAP && pool.getCollectionUsage() != null) {
+                liveMb += pool.getCollectionUsage().getUsed() / (1024 * 1024);
+            }
+        }
+
         sender.sendMessage(header("Status"));
         sender.sendMessage(row("TPS", text()
             .append(tpsPart(tps[0])).append(text(", ", ASH))
@@ -114,8 +125,10 @@ public final class FlintCommand extends Command {
             .append(text("  across " + Bukkit.getWorlds().size() + " worlds", ASH))));
         sender.sendMessage(row("Block entities", text(String.valueOf(blockEntities), NamedTextColor.WHITE)));
         sender.sendMessage(row("Loaded chunks", text(String.valueOf(chunks), NamedTextColor.WHITE)));
-        sender.sendMessage(row("Heap", text(usedMb + " / " + maxMb + " MB", NamedTextColor.WHITE)
+        sender.sendMessage(row("Heap", text(usedMb + " / " + maxMb + " MB used", NamedTextColor.WHITE)
             .append(text("  (" + TWO_DP.format(usedMb * 100.0 / Math.max(1, maxMb)) + "%)", ASH))));
+        sender.sendMessage(row("Live heap", text(liveMb + " MB after last GC", NamedTextColor.WHITE)
+            .append(text("  (the real footprint)", ASH))));
     }
 
     private void version(final CommandSender sender) {

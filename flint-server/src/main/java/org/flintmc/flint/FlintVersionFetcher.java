@@ -19,6 +19,21 @@ import org.jspecify.annotations.NullMarked;
 @NullMarked
 public final class FlintVersionFetcher implements VersionFetcher {
 
+    /**
+     * What the server says about its version at startup, off the main thread.
+     *
+     * <p>Paper's equivalent asks its download service and warns "unknown
+     * version" for anything it does not recognise, which is every FlintMC build.
+     * Until FlintMC has a release endpoint there is nothing to compare against,
+     * so this says so once, quietly, and makes no network request.
+     */
+    public static void logStartupStatus() {
+        final ServerBuildInfo info = ServerBuildInfo.buildInfo();
+        final String build = info.buildNumber().isPresent() ? "build " + info.buildNumber().getAsInt() : "development build";
+        org.slf4j.LoggerFactory.getLogger("FlintMC").info("Running FlintMC {} ({}). Update checks are not configured for this build.",
+            info.asString(ServerBuildInfo.StringRepresentation.VERSION_SIMPLE), build);
+    }
+
     @Override
     public long getCacheTime() {
         return TimeUnit.MINUTES.toMillis(30);
