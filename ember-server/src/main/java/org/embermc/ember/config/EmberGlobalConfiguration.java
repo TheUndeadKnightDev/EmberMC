@@ -34,6 +34,25 @@ public class EmberGlobalConfiguration extends EmberConfigurationPart {
     @ConfigSerializable
     public static class Entities extends EmberConfigurationPart {
         public Tiers tiers = new Tiers();
+        public ItemLimits itemLimits = new ItemLimits();
+
+        @ConfigSerializable
+        public static class ItemLimits extends EmberConfigurationPart {
+            @Comment("""
+                Cap dropped-item entities per loaded chunk, as an anti-abuse backstop against dupe machines and
+                runaway farms that flood a chunk with items. Paper only trims items when a chunk unloads; this
+                trims a loaded chunk within sweep-seconds. OFF by default because removing items changes
+                gameplay - turn it on with a generous cap, not a farm nerf. The oldest items in an over-full
+                chunk go first, so a player's fresh drop survives. Removals fire Bukkit's EntityRemoveEvent and
+                show in /ember security. Reload-safe.""")
+            public boolean enabled = false;
+            @Comment("Most dropped-item entities allowed in one loaded chunk. Reload-safe.")
+            @io.papermc.paper.configuration.constraint.Constraints.Min(0)
+            public int maxPerChunk = 300;
+            @Comment("How often to sweep, in seconds. Reload-safe.")
+            @io.papermc.paper.configuration.constraint.Constraints.Min(1)
+            public int sweepSeconds = 10;
+        }
 
         @ConfigSerializable
         public static class Tiers extends EmberConfigurationPart {

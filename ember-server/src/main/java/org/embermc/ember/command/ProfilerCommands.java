@@ -229,6 +229,10 @@ final class ProfilerCommands {
                 .build());
         }
         sender.sendMessage(text("  Per connection. Paper's all-packets limiter runs ahead of this. Never logs contents or auth.", ASH));
+        final var il = EmberConfigurations.global().entities.itemLimits;
+        sender.sendMessage(row("Item limits", il.enabled
+            ? text(il.maxPerChunk + " items/chunk", WHITE).append(text("  " + org.embermc.ember.entity.ItemLimits.removed() + " overflow items removed since start", ASH))
+            : text("off", ASH).append(text("  (anti-dupe-flood backstop; entities.item-limits)", ASH))));
     }
 
     /* ---- presentation ---------------------------------------------------- */

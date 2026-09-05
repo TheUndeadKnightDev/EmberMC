@@ -100,10 +100,13 @@ measured. No milestone proceeds past a broken build.
 
 ## Milestone 6 — Items and XP
 
-- XP orb aggregation where semantics allow (same owner rules, mending untouched)
-- Smarter dropped-item merging preserving metadata, enchantments, custom items,
-  pickup restrictions; Bukkit `ItemMergeEvent` still fired
-- Benchmarks: large XP farm, large item pile
+- [x] Reviewed: Paper already merges dropped items (radius) and XP orbs (value-grouped) well —
+  not reinvented, to avoid a fake win
+- [x] Live per-chunk item-entity cap (`entities.item-limits`, OFF by default): trims a loaded chunk
+  within sweep-seconds instead of only at unload, oldest-first, EntityRemoveEvent fired — an
+  anti-dupe-flood / lag-machine backstop Paper lacks live. `docs/optimisations/item-limits.md`
+- [x] `/ember security` line; `ember_items_removed` gauge; `ItemLimitsTest`
+- [ ] Optional: XP-orb per-area cap; live flood benchmark on the box
 
 ## Milestone 7 — Chunk engine
 
