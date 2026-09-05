@@ -99,4 +99,4 @@ Paper deactivates everything and the tiers do nothing.
 
 ## 8. Measurements
 
-_Pending — needs a player at the rig. Recorded here and in BENCHMARKS.md when run._
+Measured 2026-09-05 with a player and 2,037 mobs (BENCHMARKS.md R3): entity phase 14.76 ms (OFF/Paper) -> 10.43 (balanced) -> 9.19 (performance) -> 5.67 (extreme); MSPT 16.7 -> 6.5. Measured fractions 0.71/0.62/0.38 vs predicted 0.78/0.63/0.37. Mobs inside the player's full ring ticked fully at every tier.

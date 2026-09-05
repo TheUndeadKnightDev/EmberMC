@@ -45,6 +45,33 @@ five minutes (`1825.8` max on stock Paper's 10-second column) - the autosave.
 EmberMC's watchdog was the only thing that reported it; from this build it is
 its own profiler phase (`autosave`) so the report names it.
 
+### R3 — Entity tiers, measured with a player and 2,037 mobs (2026-09-05)
+
+One player standing in a disc of ~1,150 in-range zombies (2,037 entities total,
+AI on, spawning off), on the EmberMC `ember-folia` box. The tier was switched
+with `/ember reload` on the same running server, same mobs, same second — so
+`OFF` is EmberMC behaving exactly as Paper (every in-range mob ticks fully),
+with none of the noise of comparing two separate containers.
+
+| Tier | entities phase (mean) | MSPT (5s avg) | full / reduced this tick |
+| --- | --- | --- | --- |
+| **OFF** (= regular Paper) | 14.76 ms | 16.7 ms | 1483 / 0 |
+| balanced (0.75 ring, outer /2) | 10.43 ms | 12.0 ms | 934 / 540 |
+| performance (0.5 ring, outer /2) | 9.19 ms | 11.0 ms | 768 / 622 |
+| extreme (0.4 ring, outer /4) | **5.67 ms** | **6.5 ms** | 283 / 865 |
+
+Entity phase vs Paper behaviour: balanced **−29%**, performance **−38%**,
+extreme **−62%**. Whole-tick MSPT fell 16.7 → 6.5 ms at extreme. The measured
+fractions (0.71 / 0.62 / 0.38 of the OFF phase) land almost exactly on the
+predicted 0.78 / 0.63 / 0.37 from `docs/optimisations/entity-tiers.md`, and
+every mob within the full ring of the player kept ticking fully at all tiers —
+the promise held.
+
+**Caveats.** One run per tier; a disc of idle wandering zombies, not a real
+farm; one machine. It shows the mechanism working at the predicted scale, not a
+guarantee for every workload — which is what the profiler is for on your own
+server.
+
 ## Rules
 
 ## Rules

@@ -81,5 +81,4 @@ the entity-tier measurement under induced load: the zombie pen from
 
 ## 8. Measurements
 
-_Unit tests pass (see EmberTestSuite). Server measurement pending the same
-player-at-the-pen run as the entity tiers._
+Unit tests pass (EmberTestSuite). The entity-tier saving it modulates is measured (BENCHMARKS.md R3). Triggering a live level change still needs a load spike past 50 ms p95 held for 5 s, which the 2,037-mob rig at 16.7 ms did not reach; a heavier rig or real load will show the transition.

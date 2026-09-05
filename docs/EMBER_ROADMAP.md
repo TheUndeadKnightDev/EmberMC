@@ -78,7 +78,7 @@ measured. No milestone proceeds past a broken build.
 - [x] Opt-in Prometheus-style endpoint over the same gauges (`metrics.endpoint`, off by default, localhost)
 - [x] Tests: `TimeRingTest` (statistics, window, wrap); phase accounting and watchdog cooldown still to cover
 
-## Milestone 4 — Entity engine (in progress)
+## Milestone 4 — Entity engine (first layer measured ✅)
 
 - [x] Tiers on top of Paper's activation range: full ring / outer ring (every Nth tick, staggered) /
   Paper inactive beyond - `docs/optimisations/entity-tiers.md`
@@ -87,7 +87,7 @@ measured. No milestone proceeds past a broken build.
 - [x] Per-world `entities.optimization` finally applied; global `entities.tiers.*` overrides and kill switch
 - [x] `/ember entities` shows full vs reduced counts and each world's tier; `ember_entities_*` gauges
 - [x] `autosave` profiler phase (the five-minute stall now has a name)
-- [ ] Measurement with a player at a 400–500 zombie pen: off / balanced / performance / extreme
+- [x] Measured with a player and 2,037 mobs (BENCHMARKS.md R3): entity phase −29% / −38% / −62% vs Paper behaviour
 - [ ] Per-type tuning; villager hall and passive-mob benchmarks
 
 ## Milestone 5 — Pathfinding and collision
