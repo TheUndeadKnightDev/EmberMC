@@ -6,10 +6,10 @@ implement so it can be reviewed before code is written.
 
 ## Where it lives
 
-FlintMC's settings go in `config/flint-global.yml` and
-`config/flint-world-defaults.yml`, next to Paper's own `paper-global.yml` and
+EmberMC's settings go in `config/ember-global.yml` and
+`config/ember-world-defaults.yml`, next to Paper's own `paper-global.yml` and
 `paper-world-defaults.yml`, with per-world overrides in each world's
-`flint-world.yml`. This reuses Paper's Configurate-based configuration system —
+`ember-world.yml`. This reuses Paper's Configurate-based configuration system —
 its loader, its versioning, its migration hooks and its per-world override
 resolution — rather than adding a second YAML stack.
 
@@ -61,19 +61,19 @@ documentation; this file only describes shape and rules.
   value, the allowed range and the default that was used instead. The server
   still starts.
 - **Honest about reloading.** Each option is either reload-safe or restart-only,
-  and the generated file says which. `/flint reload` applies the reload-safe
+  and the generated file says which. `/ember reload` applies the reload-safe
   set and lists what it did not touch. Nothing is claimed to hot-reload that
   cannot.
 - **Presets are defaults, not locks.** Choosing `performance` changes what an
   unset option means. Anything set explicitly stays as set.
-- **Per-world without sprawl.** Worlds inherit from `flint-world-defaults.yml`
+- **Per-world without sprawl.** Worlds inherit from `ember-world-defaults.yml`
   and override only the keys they name.
 
 ## Presets
 
 | Preset | Intent |
 | --- | --- |
-| `vanilla` | FlintMC systems present but passive: observe and report, change nothing about gameplay timing |
+| `vanilla` | EmberMC systems present but passive: observe and report, change nothing about gameplay timing |
 | `balanced` | Production default. Optimisations that no player can notice; protections on with generous limits |
 | `performance` | Larger activation ranges, longer inactive intervals, tighter limits. Acceptable on survival; test your farms |
 | `extreme` | For lobbies, minigames and resource worlds. Distant entities barely tick. Not for a main survival world |

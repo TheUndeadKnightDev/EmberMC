@@ -1,20 +1,20 @@
 # Licence
 
-FlintMC is a fork of [Paper](https://github.com/PaperMC/Paper). It is made of
+EmberMC is a fork of [Paper](https://github.com/PaperMC/Paper). It is made of
 three kinds of code, and each keeps the licence it came with.
 
-## FlintMC's own work
+## EmberMC's own work
 
-Everything authored for FlintMC — the patches under `flint-*/paper-patches`,
-`flint-server/minecraft-patches`, `flint-checkstyle/config-patches`, the
-`build.gradle.kts.patch` files, the sources under `flint-*/src`, and the
+Everything authored for EmberMC — the patches under `ember-*/paper-patches`,
+`ember-server/minecraft-patches`, `ember-checkstyle/config-patches`, the
+`build.gradle.kts.patch` files, the sources under `ember-*/src`, and the
 documentation — is released under the MIT licence unless a patch header says
 otherwise.
 
 ```
 MIT License
 
-Copyright (c) 2026 Caleab Harless and FlintMC contributors
+Copyright (c) 2026 Caleab Harless and EmberMC contributors
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -37,7 +37,7 @@ SOFTWARE.
 
 ## Paper, Spigot, CraftBukkit and Bukkit
 
-The upstream projects FlintMC is built on keep their own licences. Paper's
+The upstream projects EmberMC is built on keep their own licences. Paper's
 patches are MIT; the Bukkit API is GPLv3; CraftBukkit and Spigot are LGPLv3.
 Those files are not committed to this repository — paperweight regenerates
 them from the Paper commit named in `gradle.properties` — and their notices are
@@ -47,14 +47,14 @@ after `./gradlew applyAllPatches`.
 
 ## Minecraft
 
-FlintMC does not redistribute Minecraft server code. Like Paper, the released
+EmberMC does not redistribute Minecraft server code. Like Paper, the released
 jar is a [Paperclip](https://github.com/PaperMC/Paperclip) launcher: on first
-run it downloads the vanilla server from Mojang and applies FlintMC's patches to
+run it downloads the vanilla server from Mojang and applies EmberMC's patches to
 it locally. Use of Minecraft is governed by the
 [Minecraft EULA](https://www.minecraft.net/eula).
 
 ## Studied projects
 
 Other Paper forks were studied for their *repository structure* while setting
-up FlintMC's build. No code was copied from them. FlintMC's optimisations are
+up EmberMC's build. No code was copied from them. EmberMC's optimisations are
 its own; where an idea is shared with another project, the patch header says so.

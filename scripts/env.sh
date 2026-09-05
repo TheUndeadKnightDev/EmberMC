@@ -11,8 +11,8 @@ export GIT_CONFIG_VALUE_0=false
 
 # Feature patches are applied with `git am`, which needs an identity in the
 # repositories paperweight generates.
-export GIT_COMMITTER_NAME="${GIT_COMMITTER_NAME:-FlintMC Build}"
-export GIT_COMMITTER_EMAIL="${GIT_COMMITTER_EMAIL:-build@flintmc.local}"
+export GIT_COMMITTER_NAME="${GIT_COMMITTER_NAME:-EmberMC Build}"
+export GIT_COMMITTER_EMAIL="${GIT_COMMITTER_EMAIL:-build@embermc.local}"
 export GIT_AUTHOR_NAME="${GIT_AUTHOR_NAME:-$GIT_COMMITTER_NAME}"
 export GIT_AUTHOR_EMAIL="${GIT_AUTHOR_EMAIL:-$GIT_COMMITTER_EMAIL}"
 
@@ -21,4 +21,4 @@ if [ -z "${JAVA_HOME:-}" ] && [ -d "/c/Program Files/Microsoft/jdk-25.0.4.101-ho
   export JAVA_HOME="C:\\Program Files\\Microsoft\\jdk-25.0.4.101-hotspot"
 fi
 
-echo "FlintMC build environment set (autocrlf=false, identity=$GIT_COMMITTER_NAME, JAVA_HOME=${JAVA_HOME:-unset})"
+echo "EmberMC build environment set (autocrlf=false, identity=$GIT_COMMITTER_NAME, JAVA_HOME=${JAVA_HOME:-unset})"

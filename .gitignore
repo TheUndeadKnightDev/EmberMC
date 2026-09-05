@@ -35,10 +35,10 @@ Thumbs.db
 /paper-server
 /paper-checkstyle
 /.checkstyle
-/flint-api/build.gradle.kts
-/flint-server/build.gradle.kts
-/flint-checkstyle/build.gradle.kts
-/flint-server/src/minecraft
+/ember-api/build.gradle.kts
+/ember-server/build.gradle.kts
+/ember-checkstyle/build.gradle.kts
+/ember-server/src/minecraft
 
 *.jar
 test-plugin.settings.gradle.kts

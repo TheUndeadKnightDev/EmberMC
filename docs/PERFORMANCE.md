@@ -1,7 +1,7 @@
 # Performance
 
-**Status: FlintMC has made no performance changes yet.** The current build is
-Paper `a2a42c5b` with FlintMC branding and the `/flint` command. It performs
+**Status: EmberMC has made no performance changes yet.** The current build is
+Paper `a2a42c5b` with EmberMC branding and the `/ember` command. It performs
 exactly as that Paper build performs, and nothing in this document is a claim
 about a measured result. See BENCHMARKS.md for how results will be produced.
 
@@ -44,7 +44,7 @@ kept because it "should" help.
 - Profiling is opt-in. The instrumentation that stays on all the time costs
   nothing measurable when the profiler is off.
 - Adaptive behaviour has hysteresis, limits, an off switch, and shows up in
-  `/flint status` when it is doing something.
+  `/ember status` when it is doing something.
 
 ## Where the work is expected to be
 

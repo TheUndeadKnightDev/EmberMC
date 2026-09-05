@@ -1,4 +1,4 @@
-# FlintMC
+# EmberMC
 
 A production-grade [Paper](https://github.com/PaperMC/Paper) fork for large
 survival and economy networks.
@@ -13,39 +13,39 @@ doing.
 | Minecraft | 26.2 |
 | Upstream | Paper `a2a42c5b` |
 | Java | 25 |
-| Command | `/flint` |
-| Permissions | `flint.command.*`, `flint.admin.*`, `flint.profiler.*`, `flint.security.*` |
-| Brand | `flintmc:flint` — reports as Paper-compatible to plugins |
+| Command | `/ember` |
+| Permissions | `ember.command.*`, `ember.admin.*`, `ember.profiler.*`, `ember.security.*` |
+| Brand | `embermc:ember` — reports as Paper-compatible to plugins |
 
 ## Status
 
-Milestone 1 — fork infrastructure, branding and `/flint status`. See
-[docs/FLINT_ROADMAP.md](docs/FLINT_ROADMAP.md) for what comes next and in what
+Milestone 1 — fork infrastructure, branding and `/ember status`. See
+[docs/EMBER_ROADMAP.md](docs/EMBER_ROADMAP.md) for what comes next and in what
 order, and why performance claims are never made without a benchmark.
 
 ## Building
 
 ```bash
-git clone <this repo> FlintMC
-cd FlintMC
+git clone <this repo> EmberMC
+cd EmberMC
 ./gradlew applyAllPatches
 ./gradlew createPaperclipJar
 ```
 
-The runnable server is `flint-server/build/libs/flint-paperclip-*.jar`.
+The runnable server is `ember-server/build/libs/ember-paperclip-*.jar`.
 Windows notes and the full workflow are in [docs/BUILDING.md](docs/BUILDING.md).
 
 ## Documentation
 
 - [BUILDING.md](docs/BUILDING.md) — prerequisites, build, run a test server
 - [UPDATING-UPSTREAM.md](docs/UPDATING-UPSTREAM.md) — pulling new Paper commits
-- [FLINT_ROADMAP.md](docs/FLINT_ROADMAP.md) — milestones and engineering rules
+- [EMBER_ROADMAP.md](docs/EMBER_ROADMAP.md) — milestones and engineering rules
 - [DISTRIBUTION.md](docs/DISTRIBUTION.md) — where server software is (and is not) distributed
-- [LICENSE.md](LICENSE.md) — MIT for FlintMC's work; upstream licences preserved
+- [LICENSE.md](LICENSE.md) — MIT for EmberMC's work; upstream licences preserved
 
 ## Licence
 
-FlintMC's patches and sources are MIT. Paper, Spigot, CraftBukkit and Bukkit
+EmberMC's patches and sources are MIT. Paper, Spigot, CraftBukkit and Bukkit
 keep their own licences, and the released jar never redistributes Mojang code —
 it is a Paperclip launcher that patches the vanilla server locally. Details in
 [LICENSE.md](LICENSE.md).

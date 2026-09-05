@@ -1,0 +1,10 @@
+--- a/net/minecraft/server/dedicated/DedicatedServer.java
++++ b/net/minecraft/server/dedicated/DedicatedServer.java
+@@ -205,6 +_,7 @@
+         consoleThread.setUncaughtExceptionHandler(new DefaultUncaughtExceptionHandler(LOGGER));
+         // consoleThread.start(); // Paper - Enhance console tab completions for brigadier commands; moved down
+         LOGGER.info("Starting minecraft server version {}", SharedConstants.getCurrentVersion().name());
++        org.embermc.ember.EmberBanner.print(LOGGER); // Ember - startup banner
+         if (Runtime.getRuntime().maxMemory() / 1024L / 1024L < 512L) {
+             LOGGER.warn("To start the server with more ram, launch it as \"java -Xmx1024M -Xms1024M -jar minecraft_server.jar\"");
+         }

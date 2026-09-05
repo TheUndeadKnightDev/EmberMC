@@ -16,7 +16,7 @@ if (!file(".git").exists()) {
         """
 
         =====================[ ERROR ]=====================
-         FlintMC must be cloned with Git, not downloaded as
+         EmberMC must be cloned with Git, not downloaded as
          a zip. The patch system is built on Git history.
 
          See BUILDING.md for the full set of steps.
@@ -25,12 +25,12 @@ if (!file(".git").exists()) {
     )
 }
 
-rootProject.name = "flint"
+rootProject.name = "ember"
 
 // Three projects of our own. Each is a thin Gradle project whose sources are
 // the upstream Paper sources (generated into paper-api/, paper-server/,
 // paper-checkstyle/ by paperweight) plus anything under our own src/ dirs.
-for (name in listOf("flint-api", "flint-server", "flint-checkstyle")) {
+for (name in listOf("ember-api", "ember-server", "ember-checkstyle")) {
     val projName = name.lowercase(Locale.ENGLISH)
     include(projName)
     findProject(":$projName")!!.projectDir = file(name)

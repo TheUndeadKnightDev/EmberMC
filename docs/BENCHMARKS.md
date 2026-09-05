@@ -1,13 +1,13 @@
 # Benchmarks
 
-**There are no FlintMC performance numbers yet.** This file exists so the
+**There are no EmberMC performance numbers yet.** This file exists so the
 method is agreed before the first optimisation lands, and so no claim is ever
 published without the run that supports it.
 
 ## Rules
 
 - Every scenario is run on Paper (the pinned commit), Purpur (same Minecraft
-  version) and FlintMC, on the same machine, same JVM, same flags, same world
+  version) and EmberMC, on the same machine, same JVM, same flags, same world
   seed, same plugin set, back to back.
 - Three runs per scenario per server; report the median. Discard a run whose
   p99 is more than 3× its median as noise, and say so.
@@ -29,7 +29,7 @@ published without the run that supports it.
   Java client library or a custom minimal client)
 - `scenarios/` — one script per scenario below that sets the world up and
   starts the measurement window
-- `collect/` — reads `/flint profiler` output and JFR recordings into CSV
+- `collect/` — reads `/ember profiler` output and JFR recordings into CSV
 - `results/` — one directory per run, never edited after the fact
 
 ## Scenarios

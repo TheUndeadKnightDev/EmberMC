@@ -1,0 +1,28 @@
+--- a/net/minecraft/CrashReport.java
++++ b/net/minecraft/CrashReport.java
+@@ -21,6 +_,7 @@
+ import org.slf4j.Logger;
+ 
+ public class CrashReport {
++    private static final List<String> EMBER_REPORT_NOTE = List.of("", "This server is running EmberMC, a Paper fork. Report this to EmberMC, not to Paper.", ""); // Ember - brand
+     private static final Logger LOGGER = LogUtils.getLogger();
+     private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss", Locale.ROOT);
+     private final String title;
+@@ -147,7 +_,7 @@
+     }
+ 
+     public String getFriendlyReport(final ReportType reportType) {
+-        return this.getFriendlyReport(reportType, List.of());
++        return this.getFriendlyReport(reportType, EMBER_REPORT_NOTE); // Ember - brand
+     }
+ 
+     public @Nullable Path getSaveFile() {
+@@ -177,7 +_,7 @@
+     }
+ 
+     public boolean saveToFile(final Path file, final ReportType reportType) {
+-        return this.saveToFile(file, reportType, List.of());
++        return this.saveToFile(file, reportType, EMBER_REPORT_NOTE); // Ember - brand
+     }
+ 
+     public SystemReport getSystemReport() {

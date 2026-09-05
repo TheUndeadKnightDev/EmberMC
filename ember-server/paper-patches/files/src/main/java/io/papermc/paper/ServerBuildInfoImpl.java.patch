@@ -1,0 +1,33 @@
+--- a/src/main/java/io/papermc/paper/ServerBuildInfoImpl.java
++++ b/src/main/java/io/papermc/paper/ServerBuildInfoImpl.java
+@@ -31,6 +_,7 @@
+     private static final String ATTRIBUTE_GIT_COMMIT = "Git-Commit";
+ 
+     private static final String BRAND_PAPER_NAME = "Paper";
++    private static final String BRAND_EMBER_NAME = "EmberMC"; // Ember - brand
+ 
+     private static final String BUILD_DEV = "DEV";
+ 
+@@ -42,9 +_,9 @@
+         this(
+             getManifestAttribute(manifest, ATTRIBUTE_BRAND_ID)
+                 .map(Key::key)
+-                .orElse(BRAND_PAPER_ID),
++                .orElse(BRAND_EMBER_ID), // Ember - brand
+             getManifestAttribute(manifest, ATTRIBUTE_BRAND_NAME)
+-                .orElse(BRAND_PAPER_NAME),
++                .orElse(BRAND_EMBER_NAME), // Ember - brand
+             SharedConstants.getCurrentVersion().id(),
+             SharedConstants.getCurrentVersion().name(),
+             getManifestAttribute(manifest, ATTRIBUTE_BUILD_NUMBER)
+@@ -61,7 +_,9 @@
+ 
+     @Override
+     public boolean isBrandCompatible(final @NotNull Key brandId) {
+-        return brandId.equals(this.brandId);
++        // Ember start - EmberMC is a Paper fork; plugins asking "is this Paper?" get yes, so nothing that works on Paper refuses to load
++        return brandId.equals(this.brandId) || brandId.equals(BRAND_PAPER_ID);
++        // Ember end
+     }
+ 
+     @Override

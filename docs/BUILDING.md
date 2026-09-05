@@ -1,4 +1,4 @@
-# Building FlintMC
+# Building EmberMC
 
 ## Prerequisites
 
@@ -14,13 +14,13 @@ named in `gradle.properties` and generates the upstream trees for you.
 ## Building
 
 ```bash
-git clone <this repo> FlintMC
-cd FlintMC
-./gradlew applyAllPatches      # generate paper-*/ trees and apply Flint's patches
+git clone <this repo> EmberMC
+cd EmberMC
+./gradlew applyAllPatches      # generate paper-*/ trees and apply Ember's patches
 ./gradlew createPaperclipJar   # build the runnable server
 ```
 
-Output: `flint-server/build/libs/flint-paperclip-<mc>-<build>.jar`.
+Output: `ember-server/build/libs/ember-paperclip-<mc>-<build>.jar`.
 
 The first `applyAllPatches` decompiles Minecraft and takes several minutes.
 Later runs are incremental.
@@ -32,7 +32,7 @@ Later runs are incremental.
 ```
 
 or copy the Paperclip jar into an empty directory and run it with
-`java -jar flint-paperclip-*.jar --nogui`.
+`java -jar ember-paperclip-*.jar --nogui`.
 
 ## Windows
 
@@ -54,38 +54,38 @@ Git configuration:
    environment rather than `--global`:
 
    ```bash
-   export GIT_COMMITTER_NAME="FlintMC Build" GIT_COMMITTER_EMAIL="build@flintmc.local"
-   export GIT_AUTHOR_NAME="FlintMC Build"    GIT_AUTHOR_EMAIL="build@flintmc.local"
+   export GIT_COMMITTER_NAME="EmberMC Build" GIT_COMMITTER_EMAIL="build@embermc.local"
+   export GIT_AUTHOR_NAME="EmberMC Build"    GIT_AUTHOR_EMAIL="build@embermc.local"
    ```
 
 `scripts/env.sh` sets both. Source it before building.
 
 If a run of `applyAllPatches` fails part-way, paperweight may have already
-written an *unpatched* `flint-*/build.gradle.kts`. Gradle configures those
+written an *unpatched* `ember-*/build.gradle.kts`. Gradle configures those
 before the patch task can fix them, so the next run fails on
 `Project ':paper-checkstyle' could not be found`. Delete the three generated
 build scripts and run again:
 
 ```bash
-rm -f flint-api/build.gradle.kts flint-server/build.gradle.kts flint-checkstyle/build.gradle.kts
+rm -f ember-api/build.gradle.kts ember-server/build.gradle.kts ember-checkstyle/build.gradle.kts
 ```
 
 ## Where things live
 
 | Path | What | Committed? |
 | --- | --- | --- |
-| `flint-api/src`, `flint-server/src` | FlintMC's own classes | yes |
-| `flint-api/paper-patches` | patches to Paper API classes | yes |
-| `flint-server/paper-patches` | patches to Paper server classes | yes |
-| `flint-server/minecraft-patches` | patches to Mojang classes | yes |
-| `flint-*/build.gradle.kts.patch` | patches to Paper's build scripts | yes |
+| `ember-api/src`, `ember-server/src` | EmberMC's own classes | yes |
+| `ember-api/paper-patches` | patches to Paper API classes | yes |
+| `ember-server/paper-patches` | patches to Paper server classes | yes |
+| `ember-server/minecraft-patches` | patches to Mojang classes | yes |
+| `ember-*/build.gradle.kts.patch` | patches to Paper's build scripts | yes |
 | `paper-api/`, `paper-server/`, `paper-checkstyle/`, `.checkstyle/` | generated upstream trees (each a Git repo) | **no** |
-| `flint-server/src/minecraft` | decompiled Minecraft with patches applied (a Git repo) | **no** |
-| `flint-*/build.gradle.kts` | generated from the `.patch` next to it | **no** |
+| `ember-server/src/minecraft` | decompiled Minecraft with patches applied (a Git repo) | **no** |
+| `ember-*/build.gradle.kts` | generated from the `.patch` next to it | **no** |
 
 ## Making a change
 
-**To FlintMC's own code**: edit under `flint-*/src` and build. No patch system
+**To EmberMC's own code**: edit under `ember-*/src` and build. No patch system
 involved.
 
 **To a Paper class**: edit the file inside `paper-server/` (or `paper-api/`),
@@ -93,25 +93,25 @@ then
 
 ```bash
 ./gradlew fixupServerFilePatches      # fold your edit into the file-patch commit
-./gradlew rebuildServerFilePatches    # regenerate flint-server/paper-patches/files
+./gradlew rebuildServerFilePatches    # regenerate ember-server/paper-patches/files
 ```
 
 (`Api` instead of `Server` for the API tree.) Mark every changed line with a
-`// Flint - <reason>` comment so the patch is self-describing.
+`// Ember - <reason>` comment so the patch is self-describing.
 
-**To a Mojang class**: same, inside `flint-server/src/minecraft/java`, with
+**To a Mojang class**: same, inside `ember-server/src/minecraft/java`, with
 `fixupMinecraftFilePatches` and `rebuildMinecraftFilePatches`.
 
 **A large feature spanning many files**: commit it as its own commit in the
 relevant generated repo and run `rebuild<Project>FeaturePatches`. The commit
 message becomes the patch header — explain intent there.
 
-**To a build script**: edit the generated `flint-*/build.gradle.kts` and run
+**To a build script**: edit the generated `ember-*/build.gradle.kts` and run
 `./gradlew rebuildPaperSingleFilePatches`.
 
 ## Tests
 
 ```bash
-./gradlew :flint-server:test
-./gradlew :flint-api:test
+./gradlew :ember-server:test
+./gradlew :ember-api:test
 ```

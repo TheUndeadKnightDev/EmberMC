@@ -1,23 +1,23 @@
 # Security
 
-**Status: FlintMC adds no protections yet.** The current build has exactly
+**Status: EmberMC adds no protections yet.** The current build has exactly
 Paper's exploit mitigations — which are substantial — and nothing more. The
-Flint Security Engine and Flint Packet Guard are Milestone 8. This document
+Ember Security Engine and Ember Packet Guard are Milestone 8. This document
 fixes the design rules before that work begins.
 
 ## Reporting a vulnerability
 
 Do not open a public issue for an exploit that works against live servers.
-Email the maintainer (address in the repository profile) with the FlintMC
+Email the maintainer (address in the repository profile) with the EmberMC
 build, a description, and a way to reproduce. You will get an acknowledgement
 within 48 hours and a fix or a workaround before any public disclosure.
 
 ## Design rules for Milestone 8
 
 **One place.** All rate tracking, payload limits and malformed-input checks go
-through the Flint Packet Guard, a single component on the Netty pipeline with
-one configuration section and one metrics view (`/flint security`,
-`/flint network`). No scattered checks.
+through the Ember Packet Guard, a single component on the Netty pipeline with
+one configuration section and one metrics view (`/ember security`,
+`/ember network`). No scattered checks.
 
 **Actions, not just kicks.** Every rule carries an action — `log`, `warn`,
 `throttle`, `drop`, `kick` — and a default chosen for a busy survival network:
@@ -34,7 +34,7 @@ hot path, uses primitive counters per player per category, and its own cost is
 one of the metrics it reports. A security system that costs 5 ms a tick has
 failed at its job.
 
-**Diagnosable.** When the Guard acts, `/flint security` says which player,
+**Diagnosable.** When the Guard acts, `/ember security` says which player,
 which category, which rule, how far over, and what action was taken. An
 administrator can always answer "why was this throttled?".
 
