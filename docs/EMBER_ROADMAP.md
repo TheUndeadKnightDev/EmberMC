@@ -163,7 +163,12 @@ measured. No milestone proceeds past a broken build.
 - [x] First responder: entity tiers scale full ring (floor 25%) and outer interval (cap 10)
 - [x] Observable: console line per change with the p95, `/ember status` Load row, `ember_adaptive_*` gauges
 - [x] Disableable and reload-safe (`adaptive.*`)
-- [ ] Further responders: pathfinding frequency, spawning work, non-critical deferral (each bounded)
+- [x] Further responder: pathfinding frequency. Under load the engine tightens the
+  failed-pathfind backoff (mobs give up on unreachable targets after fewer tries,
+  stay off longer), bounded (>=2 failures, <=200 ticks); at NORMAL it is a no-op.
+  Pure AdaptiveRuntime.scaledPathfind*, AdaptiveResponderTest (3); wired into the
+  PathNavigation patch. NORMAL leaves behaviour identical.
+- [ ] Further responders: spawning work, non-critical deferral (each bounded)
 - [ ] Server-level measurement under induced load
 
 ## Milestone 10 - Memory and network

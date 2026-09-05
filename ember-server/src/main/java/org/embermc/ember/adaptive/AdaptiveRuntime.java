@@ -83,6 +83,42 @@ public final class AdaptiveRuntime {
         }
     }
 
+    /**
+     * Pathfinding-frequency responder (pure, unit-tested): under load the engine
+     * tightens the failed-pathfind backoff, so mobs give up on an unreachable
+     * target after fewer tries and stay off it longer. Bounded: never below two
+     * failures, never past 200 ticks. At NORMAL it returns the base unchanged.
+     */
+    public static int scaledPathfindFailures(final int base, final AdaptiveEngine.LoadLevel level) {
+        final double f = switch (level) {
+            case NORMAL -> 1.0;
+            case LIGHT -> 0.8;
+            case MODERATE -> 0.6;
+            case AGGRESSIVE -> 0.4;
+        };
+        return Math.max(2, (int) Math.round(base * f));
+    }
+
+    public static int scaledPathfindBackoff(final int base, final AdaptiveEngine.LoadLevel level) {
+        final double f = switch (level) {
+            case NORMAL -> 1.0;
+            case LIGHT -> 1.25;
+            case MODERATE -> 1.6;
+            case AGGRESSIVE -> 2.0;
+        };
+        return (int) Math.min(200L, Math.round(base * f));
+    }
+
+    /** Base failures-before-backoff scaled by the current load level. */
+    public static int pathfindFailuresBefore(final int base) {
+        return scaledPathfindFailures(base, level());
+    }
+
+    /** Base backoff ticks scaled by the current load level. */
+    public static int pathfindBackoffTicks(final int base) {
+        return scaledPathfindBackoff(base, level());
+    }
+
     public static AdaptiveEngine.LoadLevel level() {
         return ENGINE.level();
     }

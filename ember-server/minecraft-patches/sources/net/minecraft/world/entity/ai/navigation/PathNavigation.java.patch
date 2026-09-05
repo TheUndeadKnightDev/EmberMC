@@ -12,8 +12,8 @@
 +        if (org.embermc.ember.config.EmberConfigurations.isInitialized()) {
 +            final var emberPf = org.embermc.ember.config.EmberConfigurations.global().entities.pathfinding;
 +            emberEnabled = emberPf.enabled;
-+            emberFailsBefore = emberPf.failuresBeforeBackoff;
-+            emberBackoffTicks = emberPf.backoffTicks;
++            emberFailsBefore = org.embermc.ember.adaptive.AdaptiveRuntime.pathfindFailuresBefore(emberPf.failuresBeforeBackoff);
++            emberBackoffTicks = org.embermc.ember.adaptive.AdaptiveRuntime.pathfindBackoffTicks(emberPf.backoffTicks);
 +        }
 +        if (emberEnabled && emberTargetKey == this.emberLastTargetKey
 +            && org.embermc.ember.entity.PathfindingBackoff.shouldSkip(this.emberFailures,
