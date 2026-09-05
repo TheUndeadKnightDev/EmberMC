@@ -123,8 +123,12 @@ public final class Bench {
         s.sendMessage(Component.text("Ember benchmark result (entity tick, vanilla = baseline):", NamedTextColor.AQUA));
         for (int i = 0; i < SEQUENCE.length; i++) {
             final String delta;
-            if (i == 0 || base <= 0) {
+            if (i == 0) {
                 delta = "baseline";
+            } else if (base < 0.05) {
+                // Baseline is essentially zero (no real entity load); a percentage
+                // here is jitter, not a saving. Say so instead of printing noise.
+                delta = "no load to measure";
             } else {
                 final double pct = (base - RESULTS[i]) / base * 100.0;
                 delta = String.format(Locale.ROOT, "%.0f%% lower", pct);
