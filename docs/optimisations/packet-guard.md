@@ -35,13 +35,13 @@ limiter in `channelRead0`.
   `max-bytes`; over it is a violation regardless of rate. Measured without
   reading contents beyond length.
 - **Action** per category: `log` (count only), `warn`, `throttle`/`drop` (drop
-  the packet, keep the player — the client just retries), `kick`.
+  the packet, keep the player - the client just retries), `kick`.
 - **Diagnostics**: `/ember security` shows every category's limit, action,
   allowed and blocked counts; `ember_packets_blocked` gauge. Console warns are
   rate-limited to one per five seconds.
 
 Defaults: movement 200/s (throttle), arm-swing 60/s (drop), book/sign 4/s +
-12 KB (kick), command 15/s (throttle), and so on — a busy survival server's
+12 KB (kick), command 15/s (throttle), and so on - a busy survival server's
 headroom, not a tight cap.
 
 ## 4. Compatibility

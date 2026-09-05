@@ -5,7 +5,7 @@ result with the run that produced it. There is one so far.
 
 ## Results
 
-### R1 — Redstone engine: Vanilla vs Alternate Current (2026-09-05)
+### R1 - Redstone engine: Vanilla vs Alternate Current (2026-09-05)
 
 | | block-ticks phase, mean | p95 |
 | --- | --- | --- |
@@ -22,7 +22,7 @@ running server; read again 12 s later. **Caveats.** One run, one rig shape,
 one machine; Alternate Current is Paper's own engine, EmberMC's contribution is
 making it the default. It is a switch worth flipping, not an EmberMC invention.
 
-### R2 — Same rig, three servers on one host: Paper, Purpur, EmberMC (2026-09-05)
+### R2 - Same rig, three servers on one host: Paper, Purpur, EmberMC (2026-09-05)
 
 Common yardstick `/mspt`, 5-second window (avg / min / max), read ~20 s after
 the rig was built. All three servers are containers on the same InterServer
@@ -40,16 +40,16 @@ it). The comparison that holds is engine-vs-engine on the same rig. EmberMC's
 result *is* Paper's Alternate Current; the difference between the rows is a
 default.
 
-**Side finding.** All three idle windows show a periodic 0.3–1.9 s tick every
+**Side finding.** All three idle windows show a periodic 0.3-1.9 s tick every
 five minutes (`1825.8` max on stock Paper's 10-second column) - the autosave.
 EmberMC's watchdog was the only thing that reported it; from this build it is
 its own profiler phase (`autosave`) so the report names it.
 
-### R3 — Entity tiers, measured with a player and 2,037 mobs (2026-09-05)
+### R3 - Entity tiers, measured with a player and 2,037 mobs (2026-09-05)
 
 One player standing in a disc of ~1,150 in-range zombies (2,037 entities total,
 AI on, spawning off), on the EmberMC `ember-folia` box. The tier was switched
-with `/ember reload` on the same running server, same mobs, same second — so
+with `/ember reload` on the same running server, same mobs, same second - so
 `OFF` is EmberMC behaving exactly as Paper (every in-range mob ticks fully),
 with none of the noise of comparing two separate containers.
 
@@ -60,16 +60,16 @@ with none of the noise of comparing two separate containers.
 | performance (0.5 ring, outer /2) | 9.19 ms | 11.0 ms | 768 / 622 |
 | extreme (0.4 ring, outer /4) | **5.67 ms** | **6.5 ms** | 283 / 865 |
 
-Entity phase vs Paper behaviour: balanced **−29%**, performance **−38%**,
-extreme **−62%**. Whole-tick MSPT fell 16.7 → 6.5 ms at extreme. The measured
+Entity phase vs Paper behaviour: balanced **-29%**, performance **-38%**,
+extreme **-62%**. Whole-tick MSPT fell 16.7 → 6.5 ms at extreme. The measured
 fractions (0.71 / 0.62 / 0.38 of the OFF phase) land almost exactly on the
 predicted 0.78 / 0.63 / 0.37 from `docs/optimisations/entity-tiers.md`, and
-every mob within the full ring of the player kept ticking fully at all tiers —
+every mob within the full ring of the player kept ticking fully at all tiers  - 
 the promise held.
 
 **Caveats.** One run per tier; a disc of idle wandering zombies, not a real
 farm; one machine. It shows the mechanism working at the predicted scale, not a
-guarantee for every workload — which is what the profiler is for on your own
+guarantee for every workload - which is what the profiler is for on your own
 server.
 
 ## Rules
@@ -92,15 +92,15 @@ server.
 
 `benchmarks/` (milestone 12) will hold:
 
-- `worlds/` — pre-generated worlds per scenario, checked in as seeds plus a
+- `worlds/` - pre-generated worlds per scenario, checked in as seeds plus a
   generation script, not as region files
-- `bots/` — a headless-client driver for the 10 / 50 / 100 / 200 player runs
+- `bots/` - a headless-client driver for the 10 / 50 / 100 / 200 player runs
   (must speak the 26.2 protocol; mineflayer does not, so this is either a
   Java client library or a custom minimal client)
-- `scenarios/` — one script per scenario below that sets the world up and
+- `scenarios/` - one script per scenario below that sets the world up and
   starts the measurement window
-- `collect/` — reads `/ember profiler` output and JFR recordings into CSV
-- `results/` — one directory per run, never edited after the fact
+- `collect/` - reads `/ember profiler` output and JFR recordings into CSV
+- `results/` - one directory per run, never edited after the fact
 
 ## Scenarios
 

@@ -34,13 +34,13 @@ measured. No milestone proceeds past a broken build.
 
 ---
 
-## Milestone 1 — Fork infrastructure and branding ✅ (baseline)
+## Milestone 1 - Fork infrastructure and branding ✅ (baseline)
 
 - [x] Upstream Paper (`a2a42c5b`, MC 26.2) built unchanged
 - [x] paperweight-patcher fork: `ember-api`, `ember-server`, `ember-checkstyle`
 - [x] Upstream build scripts patched (brand manifest, source set wiring, Fill disabled)
 - [x] Brand id `embermc:ember`, name `EmberMC`; reports Paper-compatible to plugins
-- [x] `/ember status` — TPS, MSPT, players, entities, block entities, chunks, heap
+- [x] `/ember status` - TPS, MSPT, players, entities, block entities, chunks, heap
 - [x] `/ember version`
 - [x] `ember.command.*` permissions
 - [x] Startup banner (true-colour ANSI via Adventure; plain in latest.log)
@@ -48,7 +48,7 @@ measured. No milestone proceeds past a broken build.
 - [x] Test server launched on a real box: Ember suite + floodgate + packetevents load, `/ember status` answers
 - [ ] Full plugin-compatibility matrix recorded (see PLUGIN-COMPATIBILITY.md)
 
-## Milestone 2 — Configuration framework ✅
+## Milestone 2 - Configuration framework ✅
 
 - [x] `config/ember-global.yml`, `config/ember-world-defaults.yml`, `<world>/ember-world.yml`
   on Paper's Configurate stack (`EmberConfigurations extends Configurations<G, W>`), not a second YAML layer
@@ -60,15 +60,15 @@ measured. No milestone proceeds past a broken build.
   "read now, applied from Milestone 4"
 - [ ] Tests: parsing, validation, migration (with the first transformation)
 
-## Milestone 3 — Profiler and instrumentation ✅
+## Milestone 3 - Profiler and instrumentation ✅
 
 - [x] Always-on phase timing: scheduler, block ticks, chunks, block events, entities,
-  block entities, connections, console commands, other — one `nanoTime` + one add per hook,
+  block entities, connections, console commands, other - one `nanoTime` + one add per hook,
   ~40 hooks a tick with three worlds, per-world and per-tick 60 s rings, no per-tick allocation
 - [x] Opt-in plugin attribution (event handlers + sync tasks) behind one volatile flag per site;
   sessions with auto-stop
 - [x] `/ember profiler [start [s]|stop]`, `/ember plugins`, `/ember worlds`, `/ember entities`,
-  `/ember chunks`, `/ember metrics` — every view says what it does not measure
+  `/ember chunks`, `/ember metrics` - every view says what it does not measure
 - [x] Spike watchdog: threshold, cooldown, GC delta, per-phase and per-world breakdown of the
   offending tick, heaviest plugins when a session runs, report file + one console line
 - [x] Metrics registry of `ember_*` gauges (suppliers, free when idle)
@@ -78,7 +78,7 @@ measured. No milestone proceeds past a broken build.
 - [x] Opt-in Prometheus-style endpoint over the same gauges (`metrics.endpoint`, off by default, localhost)
 - [x] Tests: `TimeRingTest` (statistics, window, wrap); phase accounting and watchdog cooldown still to cover
 
-## Milestone 4 — Entity engine (first layer measured ✅)
+## Milestone 4 - Entity engine (first layer measured ✅)
 
 - [x] Tiers on top of Paper's activation range: full ring / outer ring (every Nth tick, staggered) /
   Paper inactive beyond - `docs/optimisations/entity-tiers.md`
@@ -87,10 +87,10 @@ measured. No milestone proceeds past a broken build.
 - [x] Per-world `entities.optimization` finally applied; global `entities.tiers.*` overrides and kill switch
 - [x] `/ember entities` shows full vs reduced counts and each world's tier; `ember_entities_*` gauges
 - [x] `autosave` profiler phase (the five-minute stall now has a name)
-- [x] Measured with a player and 2,037 mobs (BENCHMARKS.md R3): entity phase −29% / −38% / −62% vs Paper behaviour
+- [x] Measured with a player and 2,037 mobs (BENCHMARKS.md R3): entity phase -29% / -38% / -62% vs Paper behaviour
 - [ ] Per-type tuning; villager hall and passive-mob benchmarks
 
-## Milestone 5 — Pathfinding and collision
+## Milestone 5 - Pathfinding and collision
 
 - Short-lived failed-path cache keyed on (entity type, start region, goal,
   world revision); invalidated on block change in the affected region
@@ -98,17 +98,17 @@ measured. No milestone proceeds past a broken build.
 - Collision search bounds for oversized entity groups; lag-machine safeguards
 - Tests: cache invalidation; AI still reaches reachable targets
 
-## Milestone 6 — Items and XP
+## Milestone 6 - Items and XP
 
-- [x] Reviewed: Paper already merges dropped items (radius) and XP orbs (value-grouped) well —
+- [x] Reviewed: Paper already merges dropped items (radius) and XP orbs (value-grouped) well  - 
   not reinvented, to avoid a fake win
 - [x] Live per-chunk item-entity cap (`entities.item-limits`, OFF by default): trims a loaded chunk
-  within sweep-seconds instead of only at unload, oldest-first, EntityRemoveEvent fired — an
+  within sweep-seconds instead of only at unload, oldest-first, EntityRemoveEvent fired - an
   anti-dupe-flood / lag-machine backstop Paper lacks live. `docs/optimisations/item-limits.md`
 - [x] `/ember security` line; `ember_items_removed` gauge; `ItemLimitsTest`
 - [ ] Optional: XP-orb per-area cap; live flood benchmark on the box
 
-## Milestone 7 — Chunk engine
+## Milestone 7 - Chunk engine
 
 - Chunk-load rate limiting per player with queueing, tuned so legitimate
   exploration and elytra travel are never blocked
@@ -116,9 +116,9 @@ measured. No milestone proceeds past a broken build.
 - Diagnostics for unnecessary chunk retention
 - Benchmarks: rapid elytra travel, mass teleport, generation stress
 
-## Milestone 8 — Packet Guard and exploit protection (core shipped)
+## Milestone 8 - Packet Guard and exploit protection (core shipped)
 
-- [x] Per-connection, per-category token-bucket limiter after Paper's all-packets limiter —
+- [x] Per-connection, per-category token-bucket limiter after Paper's all-packets limiter  - 
   `docs/optimisations/packet-guard.md`
 - [x] Categories: movement, arm-swing, interact, inventory, book/sign, chat, command,
   tab-complete, recipe, creative, other; classified by packet simple name (unit-tested)
@@ -129,10 +129,10 @@ measured. No milestone proceeds past a broken build.
 - [x] Tests: `TokenBucketTest`, `PacketCategoryTest`
 - [ ] Plugin-message and decompression-exhaustion categories; live flood benchmark on the box
 
-## Milestone 9 — Adaptive Performance Engine (brought forward; first responder shipped)
+## Milestone 9 - Adaptive Performance Engine (brought forward; first responder shipped)
 
 - [x] `AdaptiveEngine` state machine: normal / light / moderate / aggressive from tick p95 with
-  entry thresholds, exit margin, hold-up and hold-down, one step at a time, ceiling —
+  entry thresholds, exit margin, hold-up and hold-down, one step at a time, ceiling  - 
   `docs/optimisations/adaptive-engine.md`; `AdaptiveEngineTest` pins it
 - [x] First responder: entity tiers scale full ring (floor 25%) and outer interval (cap 10)
 - [x] Observable: console line per change with the p95, `/ember status` Load row, `ember_adaptive_*` gauges
@@ -140,18 +140,18 @@ measured. No milestone proceeds past a broken build.
 - [ ] Further responders: pathfinding frequency, spawning work, non-critical deferral (each bounded)
 - [ ] Server-level measurement under induced load
 
-## Milestone 10 — Memory and network
+## Milestone 10 - Memory and network
 
 - Allocation profiling of hot paths; bounded caches with metrics
 - Netty allocation review; entity-tracker and metadata packet de-duplication
 - Every buffer-lifetime change documented and tested
 
-## Milestone 11 — Compatibility testing
+## Milestone 11 - Compatibility testing
 
 - Representative plugin matrix (see PLUGIN-COMPATIBILITY.md)
 - Behaviour-change register with compatibility toggles
 
-## Milestone 12 — Benchmarking and production hardening
+## Milestone 12 - Benchmarking and production hardening
 
 - Repeatable scenarios: 10 / 50 / 100 / 200 players; the stress set in
   BENCHMARKS.md; Paper vs Purpur vs EmberMC on identical hardware

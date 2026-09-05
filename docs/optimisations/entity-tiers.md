@@ -8,7 +8,7 @@ PERFORMANCE.md requires; the measurement section is filled in as runs happen.
 `io.papermc.paper.entity.activation.ActivationRange` (Paper's "EAR 2"). Once
 per world tick, `activateEntities` walks every player, inflates one bounding box
 per `ActivationType` (animals 32, monsters 32, raiders 64, misc 16, water 16,
-villagers 32, flying 32 — `spigot.yml`), fetches every entity inside the largest
+villagers 32, flying 32 - `spigot.yml`), fetches every entity inside the largest
 box, and stamps `entity.activatedTick = currentTick` on those inside their type's
 box. In `ServerLevel.tickNonPassenger`, `checkIfActive` turns that into a boolean:
 inside the range → `entity.tick()` (full); outside → `entity.inactiveTick()`
@@ -27,7 +27,7 @@ looking at them closely: the back of a farm, the far edge of a village, mobs
 across a lake. Administrators who want to save time shrink the ranges and mobs
 then freeze visibly near players; administrators who want mobs to look alive
 widen them and pay full price for everything in view. Paper's own inactive tick
-is not a middle ground — it stops movement.
+is not a middle ground - it stops movement.
 
 ## 3. Proposed change
 
@@ -79,7 +79,7 @@ from the same world tick. No collections are introduced. No async.
 ## 6. Expected improvement
 
 For entities uniformly spread inside a player's activation range, a full ring
-at fraction *f* and interval *N* costs roughly `f² + (1 − f²)/N` of Paper's
+at fraction *f* and interval *N* costs roughly `f² + (1 - f²)/N` of Paper's
 entity-phase time: balanced ≈ 0.56 + 0.22 = **0.78**, performance
 ≈ 0.25 + 0.38 = **0.63**, extreme ≈ 0.16 + 0.21 = **0.37**. Real farms are
 not uniform (they cluster where the player is not), so the real saving on the
@@ -90,7 +90,7 @@ is the point.
 ## 7. How it will be measured
 
 `/ember profiler` entities-phase mean and p95 over 5 s, with one player standing
-at the centre of a pen of 400–500 zombies (spawned via console, force-loaded,
+at the centre of a pen of 400-500 zombies (spawned via console, force-loaded,
 `mobGriefing false`), first with `entities.tiers.enabled: false`, then
 `balanced`, `performance`, `extreme`, applied with `/ember reload` on the same
 running server. `/ember entities` reports full vs reduced counts per tick so

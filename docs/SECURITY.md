@@ -1,7 +1,7 @@
 # Security
 
 **Status: the Packet Guard core shipped in Milestone 8** (per-connection, per-category token-bucket limiter with actions log/warn/throttle/drop/kick, `/ember security`, `docs/optimisations/packet-guard.md`). The design rules below still govern what comes next. The current build has exactly
-Paper's exploit mitigations — which are substantial — and nothing more. The
+Paper's exploit mitigations - which are substantial - and nothing more. The
 Ember Security Engine and Ember Packet Guard are Milestone 8. This document
 fixes the design rules before that work begins.
 
@@ -19,8 +19,8 @@ through the Ember Packet Guard, a single component on the Netty pipeline with
 one configuration section and one metrics view (`/ember security`,
 `/ember network`). No scattered checks.
 
-**Actions, not just kicks.** Every rule carries an action — `log`, `warn`,
-`throttle`, `drop`, `kick` — and a default chosen for a busy survival network:
+**Actions, not just kicks.** Every rule carries an action - `log`, `warn`,
+`throttle`, `drop`, `kick` - and a default chosen for a busy survival network:
 throttle where a burst is plausibly legitimate (interaction, movement
 correction), drop where it never is (oversized book pages, malformed
 components), kick only for behaviour that has no honest explanation.

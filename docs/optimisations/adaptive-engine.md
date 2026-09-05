@@ -26,7 +26,7 @@ the last five seconds, deciding one of four levels:
 
 | Level | entry (p95) | full-ring scale | outer-ring interval scale |
 | --- | --- | --- | --- |
-| normal | — | 1.0 | 1 |
+| normal | - | 1.0 | 1 |
 | light | > 35 ms | 0.9 | 1 |
 | moderate | > 45 ms | 0.75 | 2 |
 | aggressive | > 50 ms | 0.6 | 4 |

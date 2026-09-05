@@ -2,7 +2,7 @@
 
 Milestone 6. Paper already merges dropped items and XP orbs well, so EmberMC
 does not reinvent that. What Paper does not do is bound a **loaded** chunk's
-item count — and that is the shape a dupe machine, a broken farm, or a deliberate
+item count - and that is the shape a dupe machine, a broken farm, or a deliberate
 lag machine takes.
 
 ## 1. Existing Paper behaviour
@@ -16,7 +16,7 @@ item entities, each ticking gravity, fire and merge scans.
 
 On an economy server, an item dupe or a runaway grinder fills a loaded chunk
 with items faster than they despawn, and the server ticks every one until the
-chunk unloads — which, around active players, is never. That is real, sustained
+chunk unloads - which, around active players, is never. That is real, sustained
 lag with no live ceiling.
 
 ## 3. Change
@@ -25,8 +25,8 @@ lag with no live ceiling.
 are bucketed by chunk; any chunk over `max-per-chunk` has its oldest excess
 items removed. Oldest-first means a player's fresh drop is the last to go and
 only long-settled overflow is culled. Removals fire Bukkit's
-`EntityRemoveEvent`. **Off by default** — it removes items, which is a gameplay
-change — and meant to be enabled with a generous cap as a backstop, not a farm
+`EntityRemoveEvent`. **Off by default** - it removes items, which is a gameplay
+change - and meant to be enabled with a generous cap as a backstop, not a farm
 nerf.
 
 ## 4. Compatibility

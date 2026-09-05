@@ -119,7 +119,7 @@ then
 
 **A large feature spanning many files**: commit it as its own commit in the
 relevant generated repo and run `rebuild<Project>FeaturePatches`. The commit
-message becomes the patch header — explain intent there.
+message becomes the patch header - explain intent there.
 
 **To a build script**: edit the generated `ember-*/build.gradle.kts` and run
 `./gradlew rebuildPaperSingleFilePatches`.

@@ -1,7 +1,7 @@
 # Configuration
 
 EmberMC's settings live next to Paper's, use the same file conventions, and
-are loaded by the same machinery — Paper's Configurate-based system, reused
+are loaded by the same machinery - Paper's Configurate-based system, reused
 rather than duplicated. An administrator who knows `paper-global.yml` already
 knows how these work.
 
@@ -9,7 +9,7 @@ knows how these work.
 | --- | --- |
 | `config/ember-global.yml` | the server |
 | `config/ember-world-defaults.yml` | every world, unless a world overrides a key |
-| `<world>/ember-world.yml` | one world's overrides — only the keys it changes. Lives next to Paper's `paper-world.yml`, e.g. `world/dimensions/minecraft/overworld/ember-world.yml` on current world layouts |
+| `<world>/ember-world.yml` | one world's overrides - only the keys it changes. Lives next to Paper's `paper-world.yml`, e.g. `world/dimensions/minecraft/overworld/ember-world.yml` on current world layouts |
 
 Paper's own files are untouched. EmberMC never reads or writes
 `paper-global.yml`.
@@ -27,7 +27,7 @@ of it.
 loader Paper ships writes a header comment per file but not per-key comments
 (Paper's own `paper-global.yml` is the same), so the explanations below are the
 reference. Each option is either
-*reload-safe* — `/ember reload` applies it — or *restart-only*. Nothing is
+*reload-safe* - `/ember reload` applies it - or *restart-only*. Nothing is
 called reload-safe unless changing it at runtime is actually safe.
 `/ember reload` re-reads every file, then tells you which values it applied and
 which need a restart.

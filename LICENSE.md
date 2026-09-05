@@ -4,16 +4,16 @@ EmberMC is published by **TheMeanOneDevelopments**. It is a fork of
 [Paper](https://github.com/PaperMC/Paper) and is made of three kinds of code,
 each keeping the licence it came with.
 
-## EmberMC's own work — GPLv3
+## EmberMC's own work - GPLv3
 
-Everything authored for EmberMC — the patches under `ember-*/paper-patches`,
+Everything authored for EmberMC - the patches under `ember-*/paper-patches`,
 `ember-server/minecraft-patches`, `ember-checkstyle/config-patches`, the
 `build.gradle.kts.patch` files, the sources under `ember-*/src`, and the
-documentation — is licensed under the **GNU General Public License, version 3**,
+documentation - is licensed under the **GNU General Public License, version 3**,
 unless a patch header states otherwise. The full text is in [`LICENSE`](LICENSE).
 
 ```
-EmberMC — a high-performance Paper fork
+EmberMC - a high-performance Paper fork
 Copyright (C) 2026 TheMeanOneDevelopments
 
 This program is free software: you can redistribute it and/or modify it under
@@ -33,7 +33,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 modify and redistribute EmberMC, including commercially. The condition is
 copyleft: **if you distribute EmberMC or a modified version of it, you must
 release your changes under GPLv3 too, with source.** Nobody can take EmberMC,
-close it, and sell it as a proprietary product — a fork stays as open as the
+close it, and sell it as a proprietary product - a fork stays as open as the
 original. TheMeanOneDevelopments retains every right as the copyright holder,
 including the ability to offer EmberMC under other terms.
 
@@ -44,9 +44,9 @@ are not covered by this licence and remain TheMeanOneDevelopments' marks.
 
 The upstream projects EmberMC is built on keep their own licences: Paper's
 patches are MIT, the Bukkit API is GPLv3, and CraftBukkit and Spigot are
-LGPLv3 — all compatible with EmberMC's GPLv3. Those files are not committed to
-this repository — paperweight regenerates them from the Paper commit named in
-`gradle.properties` — and their notices are preserved as-is in the generated
+LGPLv3 - all compatible with EmberMC's GPLv3. Those files are not committed to
+this repository - paperweight regenerates them from the Paper commit named in
+`gradle.properties` - and their notices are preserved as-is in the generated
 trees and the built jar. See `paper-server/LICENCE.txt`, `paper-server/LGPL.txt`
 and `paper-api/LICENCE.txt` after `./gradlew applyAllPatches`.
 
@@ -57,7 +57,7 @@ jar is a [Paperclip](https://github.com/PaperMC/Paperclip) launcher: on first
 run it downloads the vanilla server from Mojang and applies EmberMC's patches to
 it locally. Use of Minecraft is governed by the
 [Minecraft EULA](https://www.minecraft.net/eula), which forbids selling modified
-server software — another reason EmberMC is free.
+server software - another reason EmberMC is free.
 
 ## Studied projects
 
