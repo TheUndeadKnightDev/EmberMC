@@ -112,8 +112,11 @@ measured. No milestone proceeds past a broken build.
   `docs/optimisations/pathfinding.md`
 - [x] Reviewed: collision is already Paper-bounded (max-entity-collisions);
   oversized-group lag is handled there and by the item cap. Not reinvented.
-- [ ] Optional: POI/target search throttling for distant mobs; live stuck-crowd
-  benchmark on the box
+- [x] Reviewed: POI/target-search throttling is already Paper's, via per-type
+  tick-rates (tick-rates.sensor.villager.secondarypoisensor / .behavior). Not
+  reinvented - and the Tuner ALREADY sets the villager secondary-POI sensor in its
+  performance/extreme presets (40 -> 80 -> 120), so this milestone was already covered.
+- [ ] Optional: live stuck-crowd villager benchmark on the box
 
 ## Milestone 6 - Items and XP
 
@@ -142,7 +145,10 @@ measured. No milestone proceeds past a broken build.
   `warn-threshold`. Read-only - never force-unloads a plugin's chunk. Gauges
   `ember_chunks_plugin_held`, `ember_chunks_force_loaded`. Pure
   `ChunkInsights.shouldWarn`, `ChunkInsightsTest` (3). `docs/optimisations/chunk-engine.md`
-- [ ] Optional: portal/teleport pre-load hint; live elytra/mass-teleport read-out
+- [x] Reviewed: teleport/portal destination chunks already load off-thread in Paper
+  (Entity.teleportAsync + the Moonrise chunk system); a preload hint would reimplement
+  what upstream does. Not reinvented.
+- [ ] Optional: live elytra/mass-teleport read-out
 
 ## Milestone 8 - Packet Guard and exploit protection (core shipped)
 
@@ -197,7 +203,10 @@ measured. No milestone proceeds past a broken build.
   per-second rates and share. Zero cost when off (one volatile read on the send
   path). NetSampler + OutboundCategory, OutboundCategoryTest (5). Connection.java
   patch. `docs/optimisations/network.md`
-- [ ] Allocation profiling of hot paths; bounded caches with metrics
+- [x] Reviewed: allocation profiling is covered by spark (bundled on the boxes),
+  which samples allocations far better than a hand-rolled counter; no unbounded
+  hot-path cache was identified to fix. Not reinvented; the existing per-system
+  metrics (ember_*) cover the caches EmberMC does add (guard buckets, tiers).
 
 ## Milestone 11 - Compatibility testing
 
