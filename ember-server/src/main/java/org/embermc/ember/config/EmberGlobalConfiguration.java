@@ -232,6 +232,31 @@ public class EmberGlobalConfiguration extends EmberConfigurationPart {
         public int defaultSessionSeconds = 60;
     }
 
+    public Memory memory = new Memory();
+
+    @ConfigSerializable
+    public static class Memory extends EmberConfigurationPart {
+        public IdleTrim idleTrim = new IdleTrim();
+
+        @ConfigSerializable
+        public static class IdleTrim extends EmberConfigurationPart {
+            @Comment("""
+                Hand idle heap back to the operating system while the server is empty. After the server has
+                had zero players online for after-minutes, EmberMC asks the JVM for one collection so the
+                garbage collector can uncommit unused heap regions, shrinking the process's real footprint.
+                It runs only with nobody online, so the collection pause affects no one, and at most once per
+                idle stretch (it re-arms after a player has come and gone). This only lowers the footprint the
+                OS sees if the JVM is allowed to uncommit: the classic Xms=Xmx + AlwaysPreTouch flag set pins
+                the whole heap and the trim then returns nothing. See docs/optimisations/idle-memory.md for the
+                flags that let it work. Reload-safe.""")
+            public boolean enabled = true;
+
+            @Comment("Minutes the server must be empty before a trim. Reload-safe.")
+            @io.papermc.paper.configuration.constraint.Constraints.Min(1)
+            public int afterMinutes = 5;
+        }
+    }
+
     public UpdateChecker updateChecker = new UpdateChecker();
 
     @ConfigSerializable

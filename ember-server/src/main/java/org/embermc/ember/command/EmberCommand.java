@@ -148,6 +148,12 @@ public final class EmberCommand extends Command {
             sender.sendMessage(row("Live heap", text(liveMb + " MB after last GC", NamedTextColor.WHITE)
                 .append(text("  (the real footprint)", ASH))));
         }
+        final var idle = org.embermc.ember.config.EmberConfigurations.global().memory.idleTrim;
+        if (idle.enabled) {
+            final long freed = org.embermc.ember.memory.IdleMemory.lastTrimFreedMb();
+            sender.sendMessage(row("Idle trim", text("on, after " + idle.afterMinutes + " min empty", NamedTextColor.WHITE)
+                .append(text(freed > 0 ? "  (last trim returned " + freed + " MB)" : "  (no trim yet this uptime)", ASH))));
+        }
     }
 
     private void config(final CommandSender sender) {
