@@ -35,6 +35,7 @@ public class EmberGlobalConfiguration extends EmberConfigurationPart {
     public static class Entities extends EmberConfigurationPart {
         public Tiers tiers = new Tiers();
         public ItemLimits itemLimits = new ItemLimits();
+        public XpLimits xpLimits = new XpLimits();
         public Pathfinding pathfinding = new Pathfinding();
 
         @ConfigSerializable
@@ -72,6 +73,23 @@ public class EmberGlobalConfiguration extends EmberConfigurationPart {
             @Comment("Most dropped-item entities allowed in one loaded chunk. Reload-safe.")
             @io.papermc.paper.configuration.constraint.Constraints.Min(0)
             public int maxPerChunk = 300;
+            @Comment("How often to sweep, in seconds. Reload-safe.")
+            @io.papermc.paper.configuration.constraint.Constraints.Min(1)
+            public int sweepSeconds = 10;
+        }
+
+        @ConfigSerializable
+        public static class XpLimits extends EmberConfigurationPart {
+            @Comment("""
+                Cap experience-orb entities per loaded chunk WITHOUT losing any experience: overflow orbs' XP is
+                folded into the orbs that remain, then the emptied entities are removed. Paper merges orbs
+                pairwise by value but does not bound the count per chunk, so a grinder or XP-dupe can still pile
+                up thousands of orb entities. OFF by default. Fires EntityRemoveEvent; shown in /ember security.
+                Reload-safe.""")
+            public boolean enabled = false;
+            @Comment("Most experience-orb entities allowed in one loaded chunk before overflow is merged into survivors. Reload-safe.")
+            @io.papermc.paper.configuration.constraint.Constraints.Min(0)
+            public int maxPerChunk = 200;
             @Comment("How often to sweep, in seconds. Reload-safe.")
             @io.papermc.paper.configuration.constraint.Constraints.Min(1)
             public int sweepSeconds = 10;

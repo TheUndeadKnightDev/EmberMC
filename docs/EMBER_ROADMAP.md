@@ -114,7 +114,12 @@ measured. No milestone proceeds past a broken build.
   within sweep-seconds instead of only at unload, oldest-first, EntityRemoveEvent fired - an
   anti-dupe-flood / lag-machine backstop Paper lacks live. `docs/optimisations/item-limits.md`
 - [x] `/ember security` line; `ember_items_removed` gauge; `ItemLimitsTest`
-- [ ] Optional: XP-orb per-area cap; live flood benchmark on the box
+- [x] XP-orb per-chunk cap that loses NO experience: overflow orbs' XP is folded
+  into survivors, then emptied entities removed (Paper merges by value but does not
+  bound count/chunk). OFF by default. `entities.xp-limits`, EntityRemoveEvent,
+  /ember security line, `ember_xp_orbs_merged` gauge. XpLimits reuses the tested
+  ItemLimits.overflow.
+- [ ] Live XP-flood benchmark on the box
 
 ## Milestone 7 - Chunk engine
 

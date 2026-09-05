@@ -376,6 +376,10 @@ final class ProfilerCommands {
         sender.sendMessage(row("Item limits", il.enabled
             ? text(il.maxPerChunk + " items/chunk", WHITE).append(text("  " + org.embermc.ember.entity.ItemLimits.removed() + " overflow items removed since start", ASH))
             : text("off", ASH).append(text("  (anti-dupe-flood backstop; entities.item-limits)", ASH))));
+        final var xl = EmberConfigurations.global().entities.xpLimits;
+        sender.sendMessage(row("XP limits", xl.enabled
+            ? text(xl.maxPerChunk + " orbs/chunk", WHITE).append(text("  " + org.embermc.ember.entity.XpLimits.merged() + " overflow orbs folded into survivors (no XP lost)", ASH))
+            : text("off", ASH).append(text("  (merges overflow XP orbs, keeps the XP; entities.xp-limits)", ASH))));
     }
 
     /* ---- presentation ---------------------------------------------------- */

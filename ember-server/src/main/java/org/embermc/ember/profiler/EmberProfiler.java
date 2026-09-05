@@ -91,6 +91,7 @@ public final class EmberProfiler {
         org.embermc.ember.entity.EntityTiers.endTick();
         org.embermc.ember.adaptive.AdaptiveRuntime.tick(tickCount);
         org.embermc.ember.entity.ItemLimits.tick(tickCount);
+        org.embermc.ember.entity.XpLimits.tick(tickCount);
         org.embermc.ember.memory.IdleMemory.tick(tickCount);
         org.embermc.ember.chunk.ChunkInsights.tick(tickCount);
         org.embermc.ember.net.NetSampler.tick(tickCount);
