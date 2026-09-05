@@ -162,9 +162,16 @@ measured. No milestone proceeds past a broken build.
   about the AlwaysPreTouch/Xms=Xmx flag set pinning the heap (returns 0 then);
   uncommit-friendly flags documented. Pure `IdleMemory.dueForTrim`,
   `IdleMemoryTest` (3). `/ember status` line. `docs/optimisations/idle-memory.md`
+- [x] Reviewed: vanilla + Paper already dirty-track entity data (sendDirtyEntityData,
+  getNonDefaultValues) so metadata is already deduped - a "packet dedup" would be a
+  fake win. Not reinvented.
+- [x] Outbound network visibility (`/ember netstat start [sec] | stop`): time-boxed
+  sample of clientbound traffic by category (entity move/metadata/velocity/equipment/
+  spawn, chunk, light, block, sound, particle, player-info) with packets, bytes,
+  per-second rates and share. Zero cost when off (one volatile read on the send
+  path). NetSampler + OutboundCategory, OutboundCategoryTest (5). Connection.java
+  patch. `docs/optimisations/network.md`
 - [ ] Allocation profiling of hot paths; bounded caches with metrics
-- [ ] Netty allocation review; entity-tracker and metadata packet de-duplication
-- [ ] Every buffer-lifetime change documented and tested
 
 ## Milestone 11 - Compatibility testing
 

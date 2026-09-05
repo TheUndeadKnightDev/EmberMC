@@ -93,6 +93,7 @@ public final class EmberProfiler {
         org.embermc.ember.entity.ItemLimits.tick(tickCount);
         org.embermc.ember.memory.IdleMemory.tick(tickCount);
         org.embermc.ember.chunk.ChunkInsights.tick(tickCount);
+        org.embermc.ember.net.NetSampler.tick(tickCount);
 
         for (int i = 0; i < Phase.COUNT; i++) {
             RINGS[i].record(CURRENT[i]);

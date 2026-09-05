@@ -222,6 +222,74 @@ final class ProfilerCommands {
         }
     }
 
+    /* ---- /ember netstat -------------------------------------------------- */
+
+    static void netstat(final CommandSender sender, final String[] args) {
+        if (args.length >= 1 && args[0].equalsIgnoreCase("start")) {
+            int seconds = 15;
+            if (args.length >= 2) {
+                try {
+                    seconds = Math.max(1, Math.min(600, Integer.parseInt(args[1])));
+                } catch (final NumberFormatException ex) {
+                    sender.sendMessage(text("Usage: /ember netstat start [seconds]", ASH));
+                    return;
+                }
+            }
+            org.embermc.ember.net.NetSampler.start(org.embermc.ember.profiler.EmberProfiler.tickCount(), seconds);
+            sender.sendMessage(row("Network sample", text("started for " + seconds + "s", NamedTextColor.GREEN)
+                .append(text("  run /ember netstat to read", ASH))));
+            return;
+        }
+        if (args.length >= 1 && args[0].equalsIgnoreCase("stop")) {
+            org.embermc.ember.net.NetSampler.stop(org.embermc.ember.profiler.EmberProfiler.tickCount());
+            sender.sendMessage(row("Network sample", text("stopped", WHITE)));
+            return;
+        }
+        sender.sendMessage(header("Network out"));
+        final long total = org.embermc.ember.net.NetSampler.totalCount();
+        if (total == 0) {
+            sender.sendMessage(text("  No sample yet. Run /ember netstat start [seconds] to measure outbound traffic.", ASH));
+            sender.sendMessage(text("  Zero cost when idle; it counts clientbound packets during the window only.", ASH));
+            return;
+        }
+        final double secs = org.embermc.ember.net.NetSampler.windowSeconds();
+        final long totalBytes = org.embermc.ember.net.NetSampler.totalBytes();
+        sender.sendMessage(row(org.embermc.ember.net.NetSampler.isSampling() ? "Sampling" : "Window",
+            text(String.format("%.1fs", secs), WHITE)
+                .append(text(org.embermc.ember.net.NetSampler.isSampling() ? "  (still running)" : "  (last sample)", ASH))));
+        sender.sendMessage(text("  Category            packets      pkt/s      bytes     KiB/s    share", ASH));
+        final java.util.List<org.embermc.ember.net.OutboundCategory> cats =
+            new ArrayList<>(java.util.Arrays.asList(org.embermc.ember.net.OutboundCategory.VALUES));
+        cats.sort(Comparator.comparingLong((org.embermc.ember.net.OutboundCategory c) ->
+            org.embermc.ember.net.NetSampler.bytes(c)).reversed());
+        for (final org.embermc.ember.net.OutboundCategory c : cats) {
+            final long cnt = org.embermc.ember.net.NetSampler.count(c);
+            if (cnt == 0) {
+                continue;
+            }
+            final long b = org.embermc.ember.net.NetSampler.bytes(c);
+            sender.sendMessage(text()
+                .append(text(String.format("  %-16s", c.name().toLowerCase(Locale.ROOT)), WHITE))
+                .append(text(String.format("%10d%11.1f", cnt, cnt / secs), ASH))
+                .append(text(String.format("%11s%10.1f", human(b), b / 1024.0 / secs), ASH))
+                .append(text(String.format("%8.0f%%", totalBytes > 0 ? b * 100.0 / totalBytes : 0), ASH))
+                .build());
+        }
+        sender.sendMessage(row("Total", text(total + " packets, " + human(totalBytes)
+            + String.format(" (%.1f pkt/s, %.1f KiB/s)", total / secs, totalBytes / 1024.0 / secs), WHITE)));
+        sender.sendMessage(text("  Outbound visibility. Metadata is already deduped by dirty-tracking upstream; nothing is dropped.", ASH));
+    }
+
+    private static String human(final long bytes) {
+        if (bytes < 1024) {
+            return bytes + " B";
+        }
+        if (bytes < 1024 * 1024) {
+            return String.format("%.1f KiB", bytes / 1024.0);
+        }
+        return String.format("%.1f MiB", bytes / 1024.0 / 1024.0);
+    }
+
     /* ---- /ember metrics -------------------------------------------------- */
 
     static void metrics(final CommandSender sender) {

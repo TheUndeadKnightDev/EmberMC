@@ -26,3 +26,15 @@
              if (packetListener.shouldHandleMessage(packet)) {
                  try {
                      genericsFtw(packet, packetListener);
+@@ -397,6 +_,11 @@
+     }
+ 
+     public void send(final Packet<?> packet, final @Nullable ChannelFutureListener listener, final boolean flush) {
++        // Ember start - network sampler (off until /ember netstat start; a single volatile read when off)
++        if (org.embermc.ember.net.NetSampler.isSampling()) {
++            org.embermc.ember.net.NetSampler.record(packet.getClass().getSimpleName(), io.papermc.paper.util.MCUtil.emberPacketSize(packet));
++        }
++        // Ember end - network sampler
+         // Paper start - Optimize network: Handle oversized packets better
+         final boolean connected = this.isConnected();
+         if (!connected && !this.preparing) {
