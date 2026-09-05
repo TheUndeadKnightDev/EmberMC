@@ -43,7 +43,7 @@ public final class EmberCommand extends Command {
     private static final TextColor ASH = TextColor.color(0x9E9E9E);
     private static final TextColor SPARK = TextColor.color(0xFFCA28);
 
-    private static final List<String> SUBCOMMANDS = List.of("status", "version", "config", "reload", "profiler", "plugins", "worlds", "entities", "chunks", "metrics", "netstat", "security", "tune");
+    private static final List<String> SUBCOMMANDS = List.of("status", "version", "config", "reload", "profiler", "plugins", "worlds", "entities", "chunks", "metrics", "netstat", "bench", "security", "tune");
 
     public EmberCommand(final String name) {
         super(name);
@@ -82,6 +82,7 @@ public final class EmberCommand extends Command {
             case "chunks" -> { if (hasSub(sender, "chunks")) ProfilerCommands.chunks(sender); }
             case "metrics" -> { if (hasSub(sender, "metrics")) ProfilerCommands.metrics(sender); }
             case "netstat" -> { if (hasSub(sender, "netstat")) ProfilerCommands.netstat(sender, java.util.Arrays.copyOfRange(args, 1, args.length)); }
+            case "bench" -> { if (hasSub(sender, "bench")) bench(sender, java.util.Arrays.copyOfRange(args, 1, args.length)); }
             case "security" -> { if (hasSub(sender, "security")) ProfilerCommands.security(sender); }
             case "tune" -> { if (hasSub(sender, "tune")) TuneCommands.tune(sender, java.util.Arrays.copyOfRange(args, 1, args.length)); }
             default -> sender.sendMessage(text(this.usageMessage, NamedTextColor.RED));
@@ -155,6 +156,24 @@ public final class EmberCommand extends Command {
             sender.sendMessage(row("Idle trim", text("on, after " + idle.afterMinutes + " min empty", NamedTextColor.WHITE)
                 .append(text(freed > 0 ? "  (last trim returned " + freed + " MB)" : "  (no trim yet this uptime)", ASH))));
         }
+    }
+
+    private void bench(final CommandSender sender, final String[] args) {
+        int settle = 3;
+        int measure = 6;
+        if (args.length >= 1) {
+            try {
+                measure = Math.max(2, Math.min(30, Integer.parseInt(args[0])));
+            } catch (final NumberFormatException ex) {
+                sender.sendMessage(text("Usage: /ember bench [measure-seconds]", ASH));
+                return;
+            }
+        }
+        if (org.embermc.ember.bench.Bench.running()) {
+            sender.sendMessage(row("Benchmark", text("already running", NamedTextColor.YELLOW)));
+            return;
+        }
+        org.embermc.ember.bench.Bench.start(sender, settle, measure);
     }
 
     private void config(final CommandSender sender) {

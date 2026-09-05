@@ -180,6 +180,14 @@ measured. No milestone proceeds past a broken build.
 
 ## Milestone 12 - Benchmarking and production hardening
 
-- Repeatable scenarios: 10 / 50 / 100 / 200 players; the stress set in
+- [x] Built-in benchmark: `/ember bench [measure-seconds]` measures the entity
+  tick phase on the server's CURRENT load at each tier (vanilla baseline ->
+  balanced -> performance -> extreme) and prints the saving vs vanilla. Nothing
+  spawned or changed - the tiers only decide how often loaded mobs full-tick, so
+  it switches tier and reads the profiler. vanilla row = this box's own Paper
+  baseline, same load, seconds apart: the honest comparison. Adaptive suspended
+  for the run, all state restored after; op-only, one at a time. Reads the same
+  rings TimeRingTest/AdaptiveEngineTest pin. `docs/optimisations/benchmark-harness.md`
+- [ ] Repeatable scenarios: 10 / 50 / 100 / 200 players; the stress set in
   BENCHMARKS.md; Paper vs Purpur vs EmberMC on identical hardware
-- No performance claim is published without the benchmark that supports it
+- [ ] No performance claim is published without the benchmark that supports it

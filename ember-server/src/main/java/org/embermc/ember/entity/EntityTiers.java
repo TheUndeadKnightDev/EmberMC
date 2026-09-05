@@ -84,7 +84,22 @@ public final class EntityTiers {
     }
 
     /** Resolves the level a world runs at, from its own setting or the server profile. Cheap; called once per world per tick. */
+    private static volatile Level forced = null;
+
+    /** Force every world to a tier, for the benchmark. Null clears the override. */
+    public static void force(final Level level) {
+        forced = level;
+    }
+
+    public static Level forced() {
+        return forced;
+    }
+
     public static Level levelFor(final ServerLevel level) {
+        final Level f = forced;
+        if (f != null) {
+            return f;
+        }
         final var global = EmberConfigurations.global();
         if (!global.entities.tiers.enabled) {
             return Level.VANILLA;

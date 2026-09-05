@@ -32,7 +32,17 @@ public final class AdaptiveRuntime {
     }
 
     /** Called every tick from the profiler; does its work every 20th. */
+    private static volatile boolean suspended = false;
+
+    /** While suspended (the benchmark), the engine leaves the load response alone. */
+    public static void suspend(final boolean value) {
+        suspended = value;
+    }
+
     public static void tick(final long tickCount) {
+        if (suspended) {
+            return;
+        }
         if (tickCount % 20 != 0) {
             return;
         }
