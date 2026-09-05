@@ -58,7 +58,25 @@ Git configuration:
    export GIT_AUTHOR_NAME="EmberMC Build"    GIT_AUTHOR_EMAIL="build@embermc.local"
    ```
 
-`scripts/env.sh` sets both. Source it before building.
+3. **A git ceiling.** paperweight fetches Paper into
+   `.gradle/caches/paperweight/upstreams/paper` by running git *inside that
+   directory*. If it is not a repository yet and `git init` there does not take,
+   git walks up to the nearest repository - this one - and runs
+   `checkout -f FETCH_HEAD` on **your working tree**, replacing it with Paper's.
+   `GIT_CEILING_DIRECTORIES=<repo root>` makes git refuse to look above the
+   root from any subdirectory, so the worst case becomes an error instead of a
+   rewrite. Never delete the root `.gradle` directory by hand; if you must
+   start over, delete `.gradle/caches/paperweight/upstreams` only after
+   re-cloning it:
+
+   ```bash
+   git clone --no-checkout https://github.com/PaperMC/Paper.git .gradle/caches/paperweight/upstreams/paper
+   ```
+
+`scripts/env.sh` sets all three. Source it before building. If the working
+tree ever does get replaced, `main` is untouched: `git checkout -f main`,
+`git clean -fd`, and restore `gradle/wrapper/gradle-wrapper.jar` from any
+Paper checkout.
 
 If a run of `applyAllPatches` fails part-way, paperweight may have already
 written an *unpatched* `ember-*/build.gradle.kts`. Gradle configures those

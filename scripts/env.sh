@@ -16,6 +16,13 @@ export GIT_COMMITTER_EMAIL="${GIT_COMMITTER_EMAIL:-build@embermc.local}"
 export GIT_AUTHOR_NAME="${GIT_AUTHOR_NAME:-$GIT_COMMITTER_NAME}"
 export GIT_AUTHOR_EMAIL="${GIT_AUTHOR_EMAIL:-$GIT_COMMITTER_EMAIL}"
 
+# Fence git inside the repository. paperweight runs git with the upstream cache
+# directory as its working directory; if that directory is not (yet) a
+# repository, git walks UP and operates on the nearest one it finds - this
+# repository - and checks Paper out over your working tree. With a ceiling, git
+# refuses to look above the repo root from any subdirectory instead.
+export GIT_CEILING_DIRECTORIES="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd -W 2>/dev/null || cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+
 # JDK 25 if it is where Microsoft's installer puts it and nothing else is set.
 if [ -z "${JAVA_HOME:-}" ] && [ -d "/c/Program Files/Microsoft/jdk-25.0.4.101-hotspot" ]; then
   export JAVA_HOME="C:\\Program Files\\Microsoft\\jdk-25.0.4.101-hotspot"
