@@ -191,3 +191,9 @@ measured. No milestone proceeds past a broken build.
 - [ ] Repeatable scenarios: 10 / 50 / 100 / 200 players; the stress set in
   BENCHMARKS.md; Paper vs Purpur vs EmberMC on identical hardware
 - [ ] No performance claim is published without the benchmark that supports it
+- [x] Diagnostics advisor: `/ember doctor` reads the profiler, entity, chunk,
+  adaptive and heap numbers at once and prints a ranked list of findings with a
+  plain recommendation each (tick over budget + heaviest phase, entities heavy
+  with tiers off, plugin-held/force-loaded chunks, heap pressure, empty server
+  without idle-trim, adaptive easing load). Advises, never acts. Pure
+  `Doctor.assess(Snapshot)`, `DoctorTest` (7). `docs/optimisations/doctor.md`

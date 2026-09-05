@@ -222,6 +222,55 @@ final class ProfilerCommands {
         }
     }
 
+    /* ---- /ember doctor --------------------------------------------------- */
+
+    static void doctor(final CommandSender sender) {
+        final var cfg = EmberConfigurations.global();
+        final double tickMs = EmberProfiler.ring(Phase.TICK).stats(100).meanMs();
+        String heaviest = ""; double heaviestMs = 0;
+        for (final Phase ph : Phase.VALUES) {
+            if (ph == Phase.TICK || ph == Phase.OTHER) {
+                continue;
+            }
+            final double m = EmberProfiler.ring(ph).stats(100).meanMs();
+            if (m > heaviestMs) {
+                heaviestMs = m; heaviest = ph.label();
+            }
+        }
+        final Runtime rt = Runtime.getRuntime();
+        final long usedMb = (rt.totalMemory() - rt.freeMemory()) / (1024 * 1024);
+        final long maxMb = rt.maxMemory() / (1024 * 1024);
+        final var snap = new org.embermc.ember.doctor.Doctor.Snapshot(
+            Bukkit.getAverageTickTime(),
+            Math.min(20.0, Bukkit.getTPS()[0]),
+            heaviest, heaviestMs, tickMs,
+            cfg.entities.tiers.enabled,
+            org.embermc.ember.chunk.ChunkInsights.pluginHeldTotal(),
+            cfg.chunks.warnThreshold,
+            org.embermc.ember.chunk.ChunkInsights.forceLoadedTotal(),
+            org.embermc.ember.adaptive.AdaptiveRuntime.level().ordinal(),
+            cfg.adaptive.enabled,
+            usedMb, maxMb,
+            cfg.memory.idleTrim.enabled,
+            Bukkit.getOnlinePlayers().size());
+        final var findings = org.embermc.ember.doctor.Doctor.assess(snap);
+        sender.sendMessage(header("Doctor"));
+        for (final var f : findings) {
+            final NamedTextColor c = switch (f.severity()) {
+                case CRITICAL -> NamedTextColor.RED;
+                case WARN -> NamedTextColor.YELLOW;
+                case NOTICE -> NamedTextColor.AQUA;
+                case OK -> NamedTextColor.GREEN;
+            };
+            final String tag = f.severity() == org.embermc.ember.doctor.Doctor.Severity.OK
+                ? "OK" : f.severity().name();
+            sender.sendMessage(text("  [" + tag + "] ", c).append(text(f.title(), WHITE)));
+            if (!f.advice().isEmpty()) {
+                sender.sendMessage(text("      " + f.advice(), ASH));
+            }
+        }
+    }
+
     /* ---- /ember netstat -------------------------------------------------- */
 
     static void netstat(final CommandSender sender, final String[] args) {

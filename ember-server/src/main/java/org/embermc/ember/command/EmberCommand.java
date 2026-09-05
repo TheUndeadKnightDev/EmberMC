@@ -43,7 +43,7 @@ public final class EmberCommand extends Command {
     private static final TextColor ASH = TextColor.color(0x9E9E9E);
     private static final TextColor SPARK = TextColor.color(0xFFCA28);
 
-    private static final List<String> SUBCOMMANDS = List.of("status", "version", "config", "reload", "profiler", "plugins", "worlds", "entities", "chunks", "metrics", "netstat", "bench", "security", "tune");
+    private static final List<String> SUBCOMMANDS = List.of("status", "version", "config", "reload", "profiler", "plugins", "worlds", "entities", "chunks", "metrics", "netstat", "bench", "doctor", "security", "tune");
 
     public EmberCommand(final String name) {
         super(name);
@@ -83,6 +83,7 @@ public final class EmberCommand extends Command {
             case "metrics" -> { if (hasSub(sender, "metrics")) ProfilerCommands.metrics(sender); }
             case "netstat" -> { if (hasSub(sender, "netstat")) ProfilerCommands.netstat(sender, java.util.Arrays.copyOfRange(args, 1, args.length)); }
             case "bench" -> { if (hasSub(sender, "bench")) bench(sender, java.util.Arrays.copyOfRange(args, 1, args.length)); }
+            case "doctor" -> { if (hasSub(sender, "doctor")) ProfilerCommands.doctor(sender); }
             case "security" -> { if (hasSub(sender, "security")) ProfilerCommands.security(sender); }
             case "tune" -> { if (hasSub(sender, "tune")) TuneCommands.tune(sender, java.util.Arrays.copyOfRange(args, 1, args.length)); }
             default -> sender.sendMessage(text(this.usageMessage, NamedTextColor.RED));
