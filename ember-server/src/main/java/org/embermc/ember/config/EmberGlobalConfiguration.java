@@ -55,6 +55,44 @@ public class EmberGlobalConfiguration extends EmberConfigurationPart {
         }
     }
 
+    public Adaptive adaptive = new Adaptive();
+
+    @ConfigSerializable
+    public static class Adaptive extends EmberConfigurationPart {
+        @Comment("""
+            Respond to load automatically. Once a second the tick's p95 over the last 5 s is compared with the
+            thresholds below; after hold-up-seconds above a threshold the level rises one step, after
+            hold-down-seconds below it (minus exit-margin-ms) it falls one step. Each level asks the entity
+            tiers to shrink the full ring and slow the outer ring, within the tiers' own limits; nothing else
+            is touched, and nothing a player is interacting with is ever throttled. Reload-safe.""")
+        public boolean enabled = true;
+        @Comment("p95 above this (ms) for hold-up-seconds -> light. Reload-safe.") public double lightAboveMs = 35;
+        @Comment("p95 above this (ms) -> moderate. Reload-safe.") public double moderateAboveMs = 45;
+        @Comment("p95 above this (ms) -> aggressive. Reload-safe.") public double aggressiveAboveMs = 50;
+        @Comment("A level is left only once p95 is this far (ms) below its entry threshold. The hysteresis. Reload-safe.") public double exitMarginMs = 5;
+        @Comment("Seconds a threshold must be exceeded before rising a level. Reload-safe.") @io.papermc.paper.configuration.constraint.Constraints.Min(1) public int holdUpSeconds = 5;
+        @Comment("Seconds below the exit threshold before falling a level. Longer than hold-up on purpose. Reload-safe.") @io.papermc.paper.configuration.constraint.Constraints.Min(1) public int holdDownSeconds = 20;
+        @Comment("Highest level the engine may reach: light, moderate or aggressive. Reload-safe.") public String ceiling = "aggressive";
+    }
+
+    public Metrics metrics = new Metrics();
+
+    @ConfigSerializable
+    public static class Metrics extends EmberConfigurationPart {
+        public Endpoint endpoint = new Endpoint();
+
+        @ConfigSerializable
+        public static class Endpoint extends EmberConfigurationPart {
+            @Comment("""
+                Serve every ember_* gauge at http://<bind>:<port>/metrics in Prometheus text format. Off by default.
+                Binds to localhost by default; put a reverse proxy or firewall in front before exposing it wider.
+                Restart-only.""")
+            public boolean enabled = false;
+            @Comment("Address to bind. Restart-only.") public String bind = "127.0.0.1";
+            @Comment("Port to bind. Restart-only.") @io.papermc.paper.configuration.constraint.Constraints.Min(1) public int port = 9464;
+        }
+    }
+
     public Console console = new Console();
 
     @ConfigSerializable

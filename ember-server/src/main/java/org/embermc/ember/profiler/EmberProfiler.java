@@ -89,6 +89,7 @@ public final class EmberProfiler {
 
         SpikeWatchdog.onTick(tick, CURRENT);
         org.embermc.ember.entity.EntityTiers.endTick();
+        org.embermc.ember.adaptive.AdaptiveRuntime.tick(tickCount);
 
         for (int i = 0; i < Phase.COUNT; i++) {
             RINGS[i].record(CURRENT[i]);

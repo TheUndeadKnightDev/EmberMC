@@ -62,6 +62,17 @@ chunks at the end of every tick, with a full save every `autosave` ticks
 0.3–1.9 s on Paper, Purpur and EmberMC alike; only EmberMC's watchdog reported
 it. It now has its own phase so the report says "autosave" instead of "other".
 
+**Adaptive engine** (Milestone 9 brought forward; `docs/optimisations/adaptive-engine.md`).
+Once a second the tick p95 picks a load level - normal, light, moderate,
+aggressive - with hysteresis, and the entity tiers scale down within their own
+floors. The state machine is unit-tested; the server-level effect is measured
+with the same player-at-the-pen run as the tiers.
+
+**Tests.** `./gradlew :ember-server:test --tests org.embermc.ember.EmberTestSuite`
+runs EmberMC's own tests: ring statistics, the adaptive state machine, the
+tuner's preset table (every key has an exact upstream default, every changed
+key states its visible effect, and only the redstone entry may say "measured").
+
 ## Standing rules
 
 - Never remove vanilla behaviour for a benchmark number. Change *when* and

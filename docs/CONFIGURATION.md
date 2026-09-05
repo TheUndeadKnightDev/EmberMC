@@ -99,6 +99,47 @@ entities:
   optimization: EXTREME
 ```
 
+## Entity tiers, profiler, adaptive engine, metrics
+
+Added by Milestones 3, 4 and 9. All in `ember-global.yml`; all reload-safe
+unless marked.
+
+```yaml
+entities:
+  tiers:
+    enabled: true              # split Paper's activation range into full ring + outer ring
+    full-range-fraction: 0.0   # 0 = from profile (BALANCED 0.75, PERFORMANCE 0.5, EXTREME 0.4)
+    reduced-interval: 0        # 0 = from profile (2, 2, 4): outer-ring entities tick fully every N ticks
+
+profiler:
+  spike-threshold-ms: 100            # a tick longer than this writes a report to ember-reports/
+  spike-report-cooldown-seconds: 30
+  keep-spike-reports: 50
+  spike-reports-dir: ember-reports
+  default-session-seconds: 60        # /ember profiler start with no duration
+
+adaptive:
+  enabled: true                # respond to load: light / moderate / aggressive
+  light-above-ms: 35.0         # tick p95 (5 s) thresholds
+  moderate-above-ms: 45.0
+  aggressive-above-ms: 50.0
+  exit-margin-ms: 5.0          # leave a level only this far below its entry threshold
+  hold-up-seconds: 5           # sustained above before rising one level
+  hold-down-seconds: 20        # sustained below before falling one level
+  ceiling: aggressive          # highest level allowed
+
+metrics:
+  endpoint:
+    enabled: false             # Prometheus text at http://<bind>:<port>/metrics. Restart-only.
+    bind: 127.0.0.1
+    port: 9464
+```
+
+The adaptive engine changes exactly one thing today: it scales the entity
+tiers' full ring (never below 25% of the range) and outer-ring interval (never
+above 10). Every level change is one console line with the p95 that caused it,
+and `/ember status` shows the current level.
+
 ## Presets
 
 | Preset | Intent |

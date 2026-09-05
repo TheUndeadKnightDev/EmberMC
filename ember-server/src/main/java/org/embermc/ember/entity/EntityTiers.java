@@ -65,6 +65,16 @@ public final class EntityTiers {
         }
     }
 
+    /** What the adaptive engine is currently asking for: multipliers on the preset, clamped in the getters. */
+    private static volatile double loadFullScale = 1.0;
+    private static volatile int loadIntervalScale = 1;
+
+    /** Called by the adaptive engine. Bounds are applied where the values are read, never here. */
+    public static void setLoadResponse(final double fullRingScale, final int intervalScale) {
+        loadFullScale = fullRingScale;
+        loadIntervalScale = intervalScale;
+    }
+
     private static long fullThisTick;
     private static long reducedThisTick;
     private static long fullLastTick;
@@ -98,13 +108,19 @@ public final class EntityTiers {
     /** Effective full-ring fraction for a world, honouring the global override if set. */
     public static double fullFraction(final Level level) {
         final double override = EmberConfigurations.global().entities.tiers.fullRangeFraction;
-        return override > 0 ? override : level.fullFraction;
+        final double base = override > 0 ? override : level.fullFraction;
+        // Under load the full ring shrinks, but never below a quarter of the range: a player always has
+        // a ring of fully ticking mobs around them wide enough that nothing near them looks throttled.
+        return level == Level.VANILLA ? base : Math.max(0.25, base * loadFullScale);
     }
 
     /** Effective outer-ring interval for a world, honouring the global override if set. */
     public static int interval(final Level level) {
         final int override = EmberConfigurations.global().entities.tiers.reducedInterval;
-        return override > 0 ? override : level.interval;
+        final int base = override > 0 ? override : level.interval;
+        // Under load the outer ring slows, but never past one full tick in ten: at 1/10 a mob still
+        // visibly moves, and Paper's own inactive tick is the floor below that.
+        return level == Level.VANILLA ? base : Math.min(10, base * loadIntervalScale);
     }
 
     /**

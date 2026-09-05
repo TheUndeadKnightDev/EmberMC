@@ -29,6 +29,8 @@ public final class EmberMetrics {
         register("ember_block_entities", () -> sum(World::getTileEntityCount));
         register("ember_chunks_loaded", () -> sum(World::getChunkCount));
         register("ember_profiler_attributing", () -> EmberProfiler.attributing ? 1 : 0);
+        register("ember_adaptive_level", () -> org.embermc.ember.adaptive.AdaptiveRuntime.level().ordinal());
+        register("ember_adaptive_changes", org.embermc.ember.adaptive.AdaptiveRuntime::changes);
         register("ember_entities_full_tick", org.embermc.ember.entity.EntityTiers::fullLastTick);
         register("ember_entities_reduced_tick", org.embermc.ember.entity.EntityTiers::reducedLastTick);
         for (final Phase p : Phase.VALUES) {

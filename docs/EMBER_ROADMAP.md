@@ -75,8 +75,8 @@ measured. No milestone proceeds past a broken build.
 - [x] First measured win: Alternate Current redstone default (BENCHMARKS.md R1, 11× on block ticks)
 - [x] `/ember tune show|apply|revert <preset>`: Paper/Spigot/Bukkit performance keys with backups,
   visible-effect notes and live safety guards
-- [ ] Opt-in Prometheus-style endpoint over the same gauges
-- [ ] Tests: ring statistics, phase accounting sums to the tick, watchdog cooldown
+- [x] Opt-in Prometheus-style endpoint over the same gauges (`metrics.endpoint`, off by default, localhost)
+- [x] Tests: `TimeRingTest` (statistics, window, wrap); phase accounting and watchdog cooldown still to cover
 
 ## Milestone 4 — Entity engine (in progress)
 
@@ -125,11 +125,16 @@ measured. No milestone proceeds past a broken build.
 - Never logs authentication or session data
 - Tests: normal play under limits; hostile input fuzzing
 
-## Milestone 9 — Adaptive Performance Engine
+## Milestone 9 — Adaptive Performance Engine (brought forward; first responder shipped)
 
-- Load levels from MSPT with hysteresis: NORMAL / LIGHT / MODERATE / AGGRESSIVE
-- Responses are bounded, configurable, observable, disableable
-- Feeds entity tiers, pathfinding frequency, spawning work, non-critical deferral
+- [x] `AdaptiveEngine` state machine: normal / light / moderate / aggressive from tick p95 with
+  entry thresholds, exit margin, hold-up and hold-down, one step at a time, ceiling —
+  `docs/optimisations/adaptive-engine.md`; `AdaptiveEngineTest` pins it
+- [x] First responder: entity tiers scale full ring (floor 25%) and outer interval (cap 10)
+- [x] Observable: console line per change with the p95, `/ember status` Load row, `ember_adaptive_*` gauges
+- [x] Disableable and reload-safe (`adaptive.*`)
+- [ ] Further responders: pathfinding frequency, spawning work, non-critical deferral (each bounded)
+- [ ] Server-level measurement under induced load
 
 ## Milestone 10 — Memory and network
 

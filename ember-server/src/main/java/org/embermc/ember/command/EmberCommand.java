@@ -129,6 +129,13 @@ public final class EmberCommand extends Command {
             .build()));
         sender.sendMessage(row("MSPT", text(ONE_DP.format(mspt) + " ms", msptColour(mspt))
             .append(text("  (5s average)", ASH))));
+        final var load = org.embermc.ember.adaptive.AdaptiveRuntime.level();
+        sender.sendMessage(row("Load", text(load.name().toLowerCase(Locale.ROOT),
+                load == org.embermc.ember.adaptive.AdaptiveEngine.LoadLevel.NORMAL ? NamedTextColor.GREEN
+                    : load == org.embermc.ember.adaptive.AdaptiveEngine.LoadLevel.LIGHT ? NamedTextColor.YELLOW : NamedTextColor.RED)
+            .append(text(org.embermc.ember.config.EmberConfigurations.global().adaptive.enabled
+                ? "  (adaptive engine; " + org.embermc.ember.adaptive.AdaptiveRuntime.changes() + " changes since start)"
+                : "  (adaptive engine off)", ASH))));
         sender.sendMessage(row("Players", text(Bukkit.getOnlinePlayers().size() + " / " + Bukkit.getMaxPlayers(), NamedTextColor.WHITE)));
         sender.sendMessage(row("Entities", text(String.valueOf(entities), NamedTextColor.WHITE)
             .append(text("  across " + Bukkit.getWorlds().size() + " worlds", ASH))));
