@@ -58,7 +58,11 @@ measured. No milestone proceeds past a broken build.
 - [x] `/ember config` shows effective values per world
 - [x] Only options something reads are present; `entities.optimization` is the one marked
   "read now, applied from Milestone 4"
-- [ ] Tests: parsing, validation, migration (with the first transformation)
+- [x] Tests: config validation - EmberGlobalConfigurationTest (3): every PacketCategory
+  is mapped by limitFor (catches add-a-category-forget-the-switch), defaults sane
+  (anti-abuse OFF, optimisations ON, balanced profile), constraint bounds coherent.
+  Full Configurate parse/merge/migration round-trip is server-coupled and exercised
+  live via /ember reload; no version transformation exists yet (CURRENT_VERSION=1).
 
 ## Milestone 3 - Profiler and instrumentation ✅
 
