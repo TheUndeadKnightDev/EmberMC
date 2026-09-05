@@ -92,7 +92,12 @@ measured. No milestone proceeds past a broken build.
 - [x] `/ember entities` shows full vs reduced counts and each world's tier; `ember_entities_*` gauges
 - [x] `autosave` profiler phase (the five-minute stall now has a name)
 - [x] Measured with a player and 2,037 mobs (BENCHMARKS.md R3): entity phase -29% / -38% / -62% vs Paper behaviour
-- [ ] Per-type tuning; villager hall and passive-mob benchmarks
+- [x] Per-type tuning: entities.tiers.always-full pins named entity types (by key
+  path, e.g. villager/piglin/allay) to full ticks regardless of distance, on top of
+  the automatic interaction exemptions - for trading halls or timing-critical farm
+  mobs. Empty by default (zero cost). Cached set keyed on list identity; pure
+  alwaysFullContains + EntityTiersTypeTest (2). No patch (in EntityTiers.mustTickFully).
+- [ ] Villager-hall and passive-mob live benchmarks
 
 ## Milestone 5 - Pathfinding and collision
 

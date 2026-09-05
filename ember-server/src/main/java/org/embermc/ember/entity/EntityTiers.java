@@ -1,5 +1,10 @@
 package org.embermc.ember.entity;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Set;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.ExperienceOrb;
@@ -156,8 +161,47 @@ public final class EntityTiers {
         return true;
     }
 
+    // Per-type tuning: entity types an administrator pins to full ticks (a trading
+    // hall of villagers, a critical farm mob), on top of the interaction exemptions.
+    private static volatile List<String> alwaysFullSrc;
+    private static volatile Set<String> alwaysFullSet = Set.of();
+
+    private static Set<String> alwaysFull(final List<String> src) {
+        if (src != alwaysFullSrc) {
+            final Set<String> built = new HashSet<>();
+            for (final String s : src) {
+                built.add(s.toLowerCase(Locale.ROOT).trim());
+            }
+            alwaysFullSet = built;
+            alwaysFullSrc = src;
+        }
+        return alwaysFullSet;
+    }
+
+    /** Case-insensitive membership of an entity-type path in the configured list. Pure; unit-tested. */
+    public static boolean alwaysFullContains(final List<String> configList, final String typePath) {
+        if (configList.isEmpty()) {
+            return false;
+        }
+        final String want = typePath.toLowerCase(Locale.ROOT);
+        for (final String s : configList) {
+            if (s.toLowerCase(Locale.ROOT).trim().equals(want)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static String typePath(final Entity entity) {
+        return BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType()).getPath();
+    }
+
     /** The promise: nothing a player is interacting with is throttled. */
     private static boolean mustTickFully(final Entity entity) {
+        final List<String> pinned = EmberConfigurations.global().entities.tiers.alwaysFull;
+        if (!pinned.isEmpty() && alwaysFull(pinned).contains(typePath(entity))) {
+            return true;
+        }
         if (entity instanceof Player || entity.defaultActivationState) {
             return true;
         }

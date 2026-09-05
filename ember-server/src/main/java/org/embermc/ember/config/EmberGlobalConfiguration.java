@@ -112,6 +112,12 @@ public class EmberGlobalConfiguration extends EmberConfigurationPart {
             @Comment("0 = from the profile (balanced 2, performance 2, extreme 4). Otherwise outer-ring entities tick fully every this many ticks. Reload-safe.")
             @io.papermc.paper.configuration.constraint.Constraints.Min(0)
             public int reducedInterval = 0;
+
+            @Comment("""
+                Entity types to keep on a full tick regardless of distance, by their key path (e.g. villager,
+                piglin, allay). Per-type tuning on top of the automatic interaction exemptions: use it for a
+                trading hall or a farm mob whose timing must not drift. Empty by default (zero cost). Reload-safe.""")
+            public java.util.List<String> alwaysFull = new java.util.ArrayList<>();
         }
     }
 
