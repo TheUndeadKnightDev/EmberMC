@@ -46,7 +46,7 @@ measured. No milestone proceeds past a broken build.
 - [x] Startup banner (true-colour ANSI via Adventure; plain in latest.log)
 - [x] Docs: README, BUILDING, UPDATING-UPSTREAM, LICENSE, DISTRIBUTION, this roadmap
 - [x] Test server launched on a real box: Ember suite + floodgate + packetevents load, `/ember status` answers
-- [ ] Full plugin-compatibility matrix recorded (see PLUGIN-COMPATIBILITY.md)
+- [x] Plugin-compatibility matrix recorded live (see PLUGIN-COMPATIBILITY.md); 12 plugins, 0 errors
 
 ## Milestone 2 - Configuration framework ✅
 
@@ -175,8 +175,16 @@ measured. No milestone proceeds past a broken build.
 
 ## Milestone 11 - Compatibility testing
 
-- Representative plugin matrix (see PLUGIN-COMPATIBILITY.md)
-- Behaviour-change register with compatibility toggles
+- [x] Representative plugin matrix verified live on the box (EmberMC 26.2-DEV-3a6a3de):
+  12 plugins enabled with zero errors, incl. packetevents 2.13.0 and Floodgate
+  (brand/version detection + packet path confirmed), spark (internals), and the
+  full Ember suite (economy, GUIs, market, enchants, effects, seed spoof, chunk
+  mgmt). Risk points all clear: brand-compat, event delivery, scheduler, packet
+  path + real player login, entity-tier events, command coexistence. Recorded in
+  PLUGIN-COMPATIBILITY.md.
+- [x] Behaviour-change register with compatibility toggles (PLUGIN-COMPATIBILITY.md)
+- [ ] Extend matrix with LuckPerms / Vault / PlaceholderAPI / WorldGuard / etc.
+  (on other Ember boxes; not on the fork test box yet)
 
 ## Milestone 12 - Benchmarking and production hardening
 
