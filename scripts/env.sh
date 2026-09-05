@@ -16,12 +16,16 @@ export GIT_COMMITTER_EMAIL="${GIT_COMMITTER_EMAIL:-build@embermc.local}"
 export GIT_AUTHOR_NAME="${GIT_AUTHOR_NAME:-$GIT_COMMITTER_NAME}"
 export GIT_AUTHOR_EMAIL="${GIT_AUTHOR_EMAIL:-$GIT_COMMITTER_EMAIL}"
 
-# Fence git inside the repository. paperweight runs git with the upstream cache
-# directory as its working directory; if that directory is not (yet) a
-# repository, git walks UP and operates on the nearest one it finds - this
-# repository - and checks Paper out over your working tree. With a ceiling, git
-# refuses to look above the repo root from any subdirectory instead.
-export GIT_CEILING_DIRECTORIES="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd -W 2>/dev/null || cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+# Make sure paperweight's upstream cache is a real repository BEFORE any task
+# runs. paperweight runs git inside that directory; if it is not a repository
+# git walks up to this one and can check Paper out over your working tree.
+# (A git ceiling is not an option: paperweight also relies on walking up from
+# ember-*/…-patches to stage rebuilt patch files into this repo.)
+REPO="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+UP="$REPO/.gradle/caches/paperweight/upstreams/paper"
+if [ ! -d "$UP/.git" ]; then
+  mkdir -p "$UP" && git clone -q --no-checkout https://github.com/PaperMC/Paper.git "$UP" && echo "seeded upstream Paper clone"
+fi
 
 # JDK 25 if it is where Microsoft's installer puts it and nothing else is set.
 if [ -z "${JAVA_HOME:-}" ] && [ -d "/c/Program Files/Microsoft/jdk-25.0.4.101-hotspot" ]; then

@@ -1,79 +1,126 @@
 # Configuration
 
-**Status: not yet implemented — this is Milestone 2.** Nothing in this document
-exists in the current build. It records the design the milestone will
-implement so it can be reviewed before code is written.
+EmberMC's settings live next to Paper's, use the same file conventions, and
+are loaded by the same machinery — Paper's Configurate-based system, reused
+rather than duplicated. An administrator who knows `paper-global.yml` already
+knows how these work.
 
-## Where it lives
+| File | Scope |
+| --- | --- |
+| `config/ember-global.yml` | the server |
+| `config/ember-world-defaults.yml` | every world, unless a world overrides a key |
+| `<world>/ember-world.yml` | one world's overrides — only the keys it changes |
 
-EmberMC's settings go in `config/ember-global.yml` and
-`config/ember-world-defaults.yml`, next to Paper's own `paper-global.yml` and
-`paper-world-defaults.yml`, with per-world overrides in each world's
-`ember-world.yml`. This reuses Paper's Configurate-based configuration system —
-its loader, its versioning, its migration hooks and its per-world override
-resolution — rather than adding a second YAML stack.
+Paper's own files are untouched. EmberMC never reads or writes
+`paper-global.yml`.
 
-## Shape
+## The rules
+
+**Every option is real.** An option appears in the file only when something in
+the build reads it. Sections for the entity engine, Packet Guard and the
+adaptive engine arrive with the milestones that implement them. The one
+exception is marked as such in its own comment (`entities.optimization`, read
+and shown today, applied from Milestone 4) so world files can be prepared ahead
+of it.
+
+**Every option is documented here, with its reload semantics.** The YAML
+loader Paper ships writes a header comment per file but not per-key comments
+(Paper's own `paper-global.yml` is the same), so the explanations below are the
+reference. Each option is either
+*reload-safe* — `/ember reload` applies it — or *restart-only*. Nothing is
+called reload-safe unless changing it at runtime is actually safe.
+`/ember reload` re-reads every file, then tells you which values it applied and
+which need a restart.
+
+**Versioned.** `_version` at the top of each file. When a key moves or changes
+meaning, a transformation migrates old files in code; a value you set is never
+silently dropped.
+
+**Validated on load.** A value outside its range is reported with the path and
+the default that was used instead. The server still starts.
+
+**Presets are defaults, not locks.** `profile` decides what an *unset* option
+means. Anything you set explicitly wins over the preset.
+
+## `ember-global.yml`
 
 ```yaml
 _version: 1
 
-# One of: vanilla, balanced, performance, extreme.
-# Sets the default for every option below; anything you set explicitly wins.
+# Which set of defaults this server starts from: vanilla, balanced, performance or extreme.
+# A preset only decides what an unset option means; anything you set explicitly wins.
+# Systems arriving in later milestones read this when their own options are left blank.
+# Restart-only.
 profile: balanced
 
-entities:
-  adaptive-ticking:
-    enabled: true
-    # Blocks from the nearest active player at which an entity drops a tier.
-    reduced-tick-range: 48
-    minimal-tick-range: 96
-    # Ticks between updates in each tier. FULL is always 1.
-    reduced-interval: 4
-    minimal-interval: 20
-  optimize-pathfinding: true
-  optimize-collisions: true
-  optimize-item-merging: true
-  optimize-xp-orbs: true
+console:
+  # Print the EmberMC box at startup. Restart-only, since it is printed once at boot.
+  banner: true
+  # How much colour to use in the console: truecolor, indexed-256, indexed-16 or none.
+  # Panel consoles (Pterodactyl and friends) render truecolor; a plain terminal that shows
+  # garbage wants indexed-16 or none. Log files never contain colour either way.
+  # Restart-only.
+  color-level: truecolor
 
-adaptive-engine:
-  enabled: true
-  # MSPT thresholds for each load level, and how long a level has to hold
-  # before the engine moves — hysteresis, so it never oscillates.
-  light-above: 35
-  moderate-above: 45
-  aggressive-above: 50
-  hold-for-seconds: 10
+status:
+  # Show "live heap after last GC" in /ember status next to used heap.
+  # Used heap counts garbage not yet collected and says little about footprint on a server
+  # started with AlwaysPreTouch; live heap is the number that means something. Reload-safe.
+  show-live-heap: true
 
-packet-guard:
-  enabled: true
-  # ... per-category limits, each with an action: log | warn | throttle | drop | kick
+update-checker:
+  # Print one line at startup naming the EmberMC build. EmberMC has no update endpoint yet,
+  # so this never contacts the network; it exists so a pasted log identifies the build.
+  # Reload-safe (takes effect at the next start).
+  startup-message: true
 ```
 
-Every option carries a comment in the generated file. The comments are the
-documentation; this file only describes shape and rules.
+## `ember-world-defaults.yml` and `<world>/ember-world.yml`
 
-## Rules
+```yaml
+_version: 1
 
-- **Versioned.** `_version` at the top; migrations are code, tested, and never
-  lose a value the administrator set.
-- **Validated on load.** An out-of-range value is reported with the path, the
-  value, the allowed range and the default that was used instead. The server
-  still starts.
-- **Honest about reloading.** Each option is either reload-safe or restart-only,
-  and the generated file says which. `/ember reload` applies the reload-safe
-  set and lists what it did not touch. Nothing is claimed to hot-reload that
-  cannot.
-- **Presets are defaults, not locks.** Choosing `performance` changes what an
-  unset option means. Anything set explicitly stays as set.
-- **Per-world without sprawl.** Worlds inherit from `ember-world-defaults.yml`
-  and override only the keys they name.
+entities:
+  # How hard the entity engine may work this world: inherit (use the server profile),
+  # vanilla, balanced, performance or extreme. A lobby or resource world can run extreme
+  # while the main survival world stays balanced.
+  # NOT YET APPLIED: the entity engine arrives in Milestone 4. The value is read, validated
+  # and shown in /ember config today so world files can be prepared ahead of it.
+  optimization: inherit
+```
+
+A world file starts empty apart from `_version`. Add only what that world
+changes:
+
+```yaml
+# world_resource/ember-world.yml
+_version: 1
+entities:
+  optimization: extreme
+```
 
 ## Presets
 
 | Preset | Intent |
 | --- | --- |
 | `vanilla` | EmberMC systems present but passive: observe and report, change nothing about gameplay timing |
-| `balanced` | Production default. Optimisations that no player can notice; protections on with generous limits |
-| `performance` | Larger activation ranges, longer inactive intervals, tighter limits. Acceptable on survival; test your farms |
-| `extreme` | For lobbies, minigames and resource worlds. Distant entities barely tick. Not for a main survival world |
+| `balanced` | Production default. Optimisations no player can notice; protections on with generous limits |
+| `performance` | Larger activation ranges, longer inactive intervals, tighter limits. Test your farms |
+| `extreme` | Lobbies, minigames, resource worlds. Distant entities barely tick. Not for a main survival world |
+
+## Commands
+
+| Command | Permission | Does |
+| --- | --- | --- |
+| `/ember config` | `ember.command.config` | Shows the active profile, console settings, file locations, and each world's effective values |
+| `/ember reload` | `ember.command.reload` | Re-reads all three kinds of file and reports what applied and what needs a restart |
+
+## For developers
+
+`org.embermc.ember.config.EmberConfigurations` extends Paper's
+`Configurations<G, W>`. Global settings are `EmberConfigurations.global()`;
+a world's are `((ServerLevel) level).emberConfig()`. Sections are plain
+`@ConfigSerializable` classes extending `EmberConfigurationPart`, with
+Configurate's `@Comment` on every field. Adding an option is adding a field with
+a comment that states its reload semantics; the file, the defaults merge and
+`/ember reload` follow from that.

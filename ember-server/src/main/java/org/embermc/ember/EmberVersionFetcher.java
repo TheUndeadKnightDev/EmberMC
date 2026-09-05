@@ -28,6 +28,10 @@ public final class EmberVersionFetcher implements VersionFetcher {
      * so this says so once, quietly, and makes no network request.
      */
     public static void logStartupStatus() {
+        if (org.embermc.ember.config.EmberConfigurations.isInitialized()
+            && !org.embermc.ember.config.EmberConfigurations.global().updateChecker.startupMessage) {
+            return;
+        }
         final ServerBuildInfo info = ServerBuildInfo.buildInfo();
         final String build = info.buildNumber().isPresent() ? "build " + info.buildNumber().getAsInt() : "development build";
         org.slf4j.LoggerFactory.getLogger("EmberMC").info("Running EmberMC {} ({}). Update checks are not configured for this build.",

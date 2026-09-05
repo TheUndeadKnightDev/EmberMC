@@ -50,26 +50,44 @@ public final class EmberBanner {
      * amber into the same yellow. Panel consoles render true colour; a terminal
      * that cannot can set {@code -Dember.colorLevel=indexed16}.
      */
-    private static final ANSIComponentSerializer ANSI = ANSIComponentSerializer.builder()
-        .colorLevel(switch (System.getProperty("ember.colorLevel", "truecolor").toLowerCase(java.util.Locale.ROOT)) {
-            case "indexed16", "16" -> ColorLevel.INDEXED_16;
-            case "indexed256", "256" -> ColorLevel.INDEXED_256;
-            case "none" -> ColorLevel.NONE;
-            default -> ColorLevel.TRUE_COLOR;
-        })
-        .build();
+    /** console.color-level from ember-global.yml; -Dember.colorLevel overrides it for one run. */
+    private static ColorLevel colourLevel() {
+        final String prop = System.getProperty("ember.colorLevel");
+        if (prop != null) {
+            return switch (prop.toLowerCase(java.util.Locale.ROOT)) {
+                case "indexed16", "16" -> ColorLevel.INDEXED_16;
+                case "indexed256", "256" -> ColorLevel.INDEXED_256;
+                case "none" -> ColorLevel.NONE;
+                default -> ColorLevel.TRUE_COLOR;
+            };
+        }
+        if (org.embermc.ember.config.EmberConfigurations.isInitialized()) {
+            return switch (org.embermc.ember.config.EmberConfigurations.global().console.colorLevel) {
+                case INDEXED_16 -> ColorLevel.INDEXED_16;
+                case INDEXED_256 -> ColorLevel.INDEXED_256;
+                case NONE -> ColorLevel.NONE;
+                case TRUECOLOR -> ColorLevel.TRUE_COLOR;
+            };
+        }
+        return ColorLevel.TRUE_COLOR;
+    }
     private static final int WIDTH = 48;
 
     private EmberBanner() {
     }
 
     public static void print(final Logger logger) {
+        if (org.embermc.ember.config.EmberConfigurations.isInitialized()
+            && !org.embermc.ember.config.EmberConfigurations.global().console.banner) {
+            return;
+        }
         final ServerBuildInfo info = ServerBuildInfo.buildInfo();
         final String upstream = upstreamCommit().map(c -> "Paper " + c.substring(0, Math.min(7, c.length())))
             .orElse("Paper");
 
         final boolean colour = !Boolean.getBoolean("ember.plainBanner")
-            && !"false".equalsIgnoreCase(System.getProperty("terminal.ansi", "true"));
+            && !"false".equalsIgnoreCase(System.getProperty("terminal.ansi", "true"))
+            && colourLevel() != ColorLevel.NONE;
 
         final Component top = text().append(text("╭", RULE)).append(text("─".repeat(WIDTH), RULE)).append(text("╮", RULE)).build();
         final Component bottom = text().append(text("╰", RULE)).append(text("─".repeat(WIDTH), RULE)).append(text("╯", RULE)).build();
@@ -87,7 +105,7 @@ public final class EmberBanner {
         };
 
         for (final Component line : lines) {
-            logger.info(colour ? ANSI.serialize(line)
+            logger.info(colour ? ANSIComponentSerializer.builder().colorLevel(colourLevel()).build().serialize(line)
                 : PlainTextComponentSerializer.plainText().serialize(line));
         }
     }

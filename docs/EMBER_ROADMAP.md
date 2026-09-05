@@ -48,15 +48,17 @@ measured. No milestone proceeds past a broken build.
 - [x] Test server launched on a real box: Ember suite + floodgate + packetevents load, `/ember status` answers
 - [ ] Full plugin-compatibility matrix recorded (see PLUGIN-COMPATIBILITY.md)
 
-## Milestone 2 — Configuration framework
+## Milestone 2 — Configuration framework ✅
 
-- `ember.yml` (global) and per-world overrides, built on Paper's Configurate-based
-  configuration system rather than a second YAML stack
-- Versioned, validated, with migrations
-- Presets: `VANILLA`, `BALANCED` (default), `PERFORMANCE`, `EXTREME`
-- Honest reload semantics: each option is marked reload-safe or restart-only,
-  and `/ember reload` only touches the former
-- Tests: parsing, validation, migration, preset application
+- [x] `config/ember-global.yml`, `config/ember-world-defaults.yml`, `<world>/ember-world.yml`
+  on Paper's Configurate stack (`EmberConfigurations extends Configurations<G, W>`), not a second YAML layer
+- [x] Versioned (`_version`), constraint-validated, comment-persisting; transformations hook ready
+- [x] Presets `vanilla · balanced (default) · performance · extreme` as the `profile` key
+- [x] Every option's comment states reload-safe or restart-only; `/ember reload` reports both lists
+- [x] `/ember config` shows effective values per world
+- [x] Only options something reads are present; `entities.optimization` is the one marked
+  "read now, applied from Milestone 4"
+- [ ] Tests: parsing, validation, migration (with the first transformation)
 
 ## Milestone 3 — Profiler and instrumentation
 

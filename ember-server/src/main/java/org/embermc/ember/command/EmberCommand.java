@@ -43,7 +43,7 @@ public final class EmberCommand extends Command {
     private static final TextColor ASH = TextColor.color(0x9E9E9E);
     private static final TextColor SPARK = TextColor.color(0xFFCA28);
 
-    private static final List<String> SUBCOMMANDS = List.of("status", "version");
+    private static final List<String> SUBCOMMANDS = List.of("status", "version", "config", "reload");
 
     public EmberCommand(final String name) {
         super(name);
@@ -73,6 +73,8 @@ public final class EmberCommand extends Command {
         switch (sub) {
             case "status" -> status(sender);
             case "version", "ver" -> version(sender);
+            case "config" -> config(sender);
+            case "reload" -> reload(sender);
             default -> sender.sendMessage(text(this.usageMessage, NamedTextColor.RED));
         }
         return true;
@@ -127,8 +129,41 @@ public final class EmberCommand extends Command {
         sender.sendMessage(row("Loaded chunks", text(String.valueOf(chunks), NamedTextColor.WHITE)));
         sender.sendMessage(row("Heap", text(usedMb + " / " + maxMb + " MB used", NamedTextColor.WHITE)
             .append(text("  (" + TWO_DP.format(usedMb * 100.0 / Math.max(1, maxMb)) + "%)", ASH))));
-        sender.sendMessage(row("Live heap", text(liveMb + " MB after last GC", NamedTextColor.WHITE)
-            .append(text("  (the real footprint)", ASH))));
+        if (org.embermc.ember.config.EmberConfigurations.global().status.showLiveHeap) {
+            sender.sendMessage(row("Live heap", text(liveMb + " MB after last GC", NamedTextColor.WHITE)
+                .append(text("  (the real footprint)", ASH))));
+        }
+    }
+
+    private void config(final CommandSender sender) {
+        if (!hasSub(sender, "config")) {
+            return;
+        }
+        final var global = org.embermc.ember.config.EmberConfigurations.global();
+        sender.sendMessage(header("Config"));
+        sender.sendMessage(row("Profile", text(global.profile.name().toLowerCase(Locale.ROOT), NamedTextColor.WHITE)));
+        sender.sendMessage(row("Console", text("banner " + (global.console.banner ? "on" : "off") + ", colour "
+            + global.console.colorLevel.name().toLowerCase(Locale.ROOT).replace('_', '-'), NamedTextColor.WHITE)));
+        sender.sendMessage(row("Files", text("config/" + org.embermc.ember.config.EmberConfigurations.GLOBAL_FILE
+            + ", config/" + org.embermc.ember.config.EmberConfigurations.WORLD_DEFAULTS_FILE
+            + ", <world>/" + org.embermc.ember.config.EmberConfigurations.WORLD_FILE, ASH)));
+        for (final World world : Bukkit.getWorlds()) {
+            final var level = ((org.bukkit.craftbukkit.CraftWorld) world).getHandle();
+            sender.sendMessage(row(world.getName(), text("entities.optimization = "
+                + level.emberConfig().entities.optimization.name().toLowerCase(Locale.ROOT), NamedTextColor.WHITE)
+                .append(text("  (read; applied from Milestone 4)", ASH))));
+        }
+    }
+
+    private void reload(final CommandSender sender) {
+        if (!hasSub(sender, "reload")) {
+            return;
+        }
+        org.embermc.ember.config.EmberConfigurations.get().reload(net.minecraft.server.MinecraftServer.getServer());
+        sender.sendMessage(header("Reload"));
+        sender.sendMessage(row("Re-read", text("ember-global.yml, ember-world-defaults.yml and every world's ember-world.yml", NamedTextColor.WHITE)));
+        sender.sendMessage(row("Applied now", text("status.*, update-checker.*, per-world entities.*", NamedTextColor.WHITE)));
+        sender.sendMessage(row("Needs restart", text("profile, console.*", NamedTextColor.YELLOW)));
     }
 
     private void version(final CommandSender sender) {
