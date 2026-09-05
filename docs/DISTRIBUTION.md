@@ -38,7 +38,8 @@ downloads the vanilla server from Mojang and applies EmberMC's patches locally.
 That is the same mechanism Paper itself relies on.
 
 The Minecraft EULA forbids selling modified server software. EmberMC is free and
-MIT-licensed. Revenue around a fork comes from what runs *on* it — premium
+GPLv3-licensed (published by TheMeanOneDevelopments); a distributed fork must
+stay open under GPLv3 too. Revenue around a fork comes from what runs *on* it — premium
 plugins, hosting, support — not from the server itself.
 
 ## Release checklist

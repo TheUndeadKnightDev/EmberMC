@@ -43,11 +43,13 @@ Windows notes and the full workflow are in [docs/BUILDING.md](docs/BUILDING.md).
 - [UPDATING-UPSTREAM.md](docs/UPDATING-UPSTREAM.md) — pulling new Paper commits
 - [EMBER_ROADMAP.md](docs/EMBER_ROADMAP.md) — milestones and engineering rules
 - [DISTRIBUTION.md](docs/DISTRIBUTION.md) — where server software is (and is not) distributed
-- [LICENSE.md](LICENSE.md) — MIT for EmberMC's work; upstream licences preserved
+- [LICENSE.md](LICENSE.md) — GPLv3 (TheMeanOneDevelopments); upstream licences preserved
 
 ## Licence
 
-EmberMC's patches and sources are MIT. Paper, Spigot, CraftBukkit and Bukkit
-keep their own licences, and the released jar never redistributes Mojang code —
-it is a Paperclip launcher that patches the vanilla server locally. Details in
-[LICENSE.md](LICENSE.md).
+EmberMC is published by **TheMeanOneDevelopments** under the **GNU GPL v3**: use,
+run, study and modify it freely, including commercially, but any distributed
+fork must stay open under GPLv3 too. Paper, Spigot, CraftBukkit and Bukkit keep
+their own (compatible) licences, and the released jar never redistributes Mojang
+code — it is a Paperclip launcher that patches the vanilla server locally.
+Details in [LICENSE.md](LICENSE.md).

@@ -78,7 +78,7 @@
 -            "Specification-Vendor" to "Paper Team",
 -            "Brand-Id" to "papermc:paper",
 -            "Brand-Name" to "Paper",
-+            "Specification-Vendor" to "EmberMC", // Ember - brand
++            "Specification-Vendor" to "TheMeanOneDevelopments", // Ember - brand
 +            "Brand-Id" to "embermc:ember", // Ember - brand
 +            "Brand-Name" to "EmberMC", // Ember - brand
 +            "Upstream-Paper-Commit" to rootProject.providers.gradleProperty("paperCommit").get(), // Ember - shown in the startup banner
