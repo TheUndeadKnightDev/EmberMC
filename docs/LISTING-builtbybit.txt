@@ -1,0 +1,87 @@
+EmberMC — BuiltByBit listing (BBCode). Paste into the resource description.
+Category: Minecraft > Server jar resources. Truthful per BBB rules: no DRM/phone-home
+claims, no "no network requests" claim, AI assistance disclosed in the thread.
+Charts are the real measured benchmarks (PNG on the CDN).
+================================================================================
+
+[CENTER][IMG]https://cdn.emberplugins.online/embermc/embermc-banner.png[/IMG][/CENTER]
+
+[SIZE=6][B]EmberMC[/B][/SIZE] — Ignite better performance.
+A high-performance Paper fork for large survival and economy networks, on
+Minecraft [B]26.2[/B]. It runs every Paper plugin unchanged, and it is
+[B]free and open source[/B] (GPLv3), published by TheMeanOneDevelopments.
+
+[SIZE=5][B]Measured, not claimed[/B][/SIZE]
+Every fork says "faster". Here are the numbers, on real hardware, that you can
+reproduce yourself with the built-in profiler.
+
+[CENTER][IMG]https://cdn.emberplugins.online/embermc/embermc-bench-tiers.png[/IMG][/CENTER]
+
+2,037 mobs on one server, entity-tick time, switched live:
+[TABLE]
+[TR][TH]Setting[/TH][TH]Entity tick[/TH][TH]vs Paper[/TH][/TR]
+[TR][TD]Paper (baseline)[/TD][TD]14.76 ms[/TD][TD]—[/TD][/TR]
+[TR][TD]EmberMC Balanced[/TD][TD]10.43 ms[/TD][TD]29% lower[/TD][/TR]
+[TR][TD]EmberMC Performance[/TD][TD]9.19 ms[/TD][TD]38% lower[/TD][/TR]
+[TR][TD]EmberMC Extreme[/TD][TD]5.67 ms[/TD][TD]62% lower[/TD][/TR]
+[/TABLE]
+
+[CENTER][IMG]https://cdn.emberplugins.online/embermc/embermc-bench-redstone.png[/IMG][/CENTER]
+
+Redstone (961-dust clock, same rig on each server, MSPT):
+[TABLE]
+[TR][TH]Server[/TH][TH]MSPT[/TH][/TR]
+[TR][TD]Paper[/TD][TD]3.0 ms[/TD][/TR]
+[TR][TD]Purpur[/TD][TD]2.5 ms[/TD][/TR]
+[TR][TD]EmberMC[/TD][TD]0.6 ms[/TD][/TR]
+[/TABLE]
+Method for both: https://docs.emberplugins.online/embermc/benchmarks/
+
+[SIZE=5][B]What it does[/B][/SIZE]
+[LIST]
+[*][B]Entity tiering[/B] — a middle gear between Paper's on/off activation. Mobs
+far from players tick less; anything a player is fighting, riding, leashing or
+farming is never touched. That is the 62% above, with no frozen mobs.
+[*][B]Always-on profiler[/B] — /ember profiler shows where every millisecond of
+the tick goes, per phase and per plugin, for about a microsecond of overhead.
+[*][B]Spike watchdog[/B] — when a tick blows its budget, EmberMC writes a report
+of exactly what that tick was doing. No more guessing at 3am.
+[*][B]Packet Guard[/B] — per-category inbound packet limits (movement, commands,
+book/sign, inventory and more), each with log / warn / throttle / drop / kick.
+[*][B]Adaptive engine[/B] — watches tick times and eases off automatically under
+load, within bounded limits, then walks back when the spike passes.
+[*][B]Item limits[/B] — a live per-chunk item cap that stops dupe floods and
+runaway farms from lagging a loaded chunk.
+[*][B]The Tuner[/B] — /ember tune applies Paper/Spigot/Bukkit performance presets
+for you, with backups, and tells you what each change does before it writes it.
+[*][B]Alternate Current redstone[/B] on by default (that is the 5x above).
+[/LIST]
+
+[SPOILER=Commands and permissions]
+/ember status — TPS, MSPT, entities, chunks, live heap
+/ember profiler [start|stop] — tick phase timings and per-plugin cost
+/ember plugins | worlds | entities | chunks | metrics
+/ember security — Packet Guard limits and blocked counts
+/ember tune show|apply|revert <preset> — performance presets with backups
+/ember config | reload
+
+Permissions: ember.command.* (all default to operators).
+Full docs: https://docs.emberplugins.online/embermc/
+[/SPOILER]
+
+[SIZE=5][B]Installation[/B][/SIZE]
+Replace your Paper jar with the EmberMC jar and start the server as normal.
+First boot downloads the vanilla server from Mojang and patches it locally
+(Paperclip), so no Mojang code is redistributed. Java 21+ (Java 25 recommended).
+Your worlds, plugins and configs are untouched; to go back, put the old jar back.
+
+On Pterodactyl, import the egg from the GitHub repo (eggs/egg-embermc.json) and
+pick EmberMC from the dropdown.
+
+[SIZE=5][B]Free and open[/B][/SIZE]
+EmberMC is GPLv3. Source, every build, and the full changelog:
+[LIST]
+[*]GitHub: https://github.com/TheUndeadKnightDev/EmberMC
+[*]Downloads: https://docs.emberplugins.online/embermc/
+[*]Docs: https://docs.emberplugins.online/embermc/
+[/LIST]

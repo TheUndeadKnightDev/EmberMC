@@ -1,0 +1,55 @@
+{
+    "_comment": "EmberMC Pterodactyl egg. Published by TheMeanOneDevelopments under GPLv3. On install it downloads the latest EmberMC Paperclip build from cdn.emberplugins.online; the jar downloads the vanilla server from Mojang and patches it locally on first boot.",
+    "meta": {
+        "version": "PTDL_v2",
+        "update_url": null
+    },
+    "exported_at": "2026-09-05T00:00:00+00:00",
+    "name": "EmberMC",
+    "author": "caleab.harless@gmail.com",
+    "description": "EmberMC: a high-performance, GPLv3 Paper fork for large survival and economy networks. Runs every Paper plugin. Entity tiering, an always-on profiler, Packet Guard and an adaptive performance engine.",
+    "features": [
+        "eula",
+        "java_version",
+        "pid_limit"
+    ],
+    "docker_images": {
+        "Java 25": "ghcr.io/pterodactyl/yolks:java_25",
+        "Java 21": "ghcr.io/pterodactyl/yolks:java_21"
+    },
+    "file_denylist": [],
+    "startup": "java -Xms128M -XX:MaxRAMPercentage=95.0 -Dterminal.jline=false -Dterminal.ansi=true -Dember.colorLevel=truecolor -jar {{SERVER_JARFILE}}",
+    "config": {
+        "files": "{\r\n    \"server.properties\": {\r\n        \"parser\": \"properties\",\r\n        \"find\": {\r\n            \"server-ip\": \"0.0.0.0\",\r\n            \"server-port\": \"{{server.build.default.port}}\"\r\n        }\r\n    }\r\n}",
+        "startup": "{\r\n    \"done\": \")! For help, type \"\r\n}",
+        "logs": "{}",
+        "stop": "stop"
+    },
+    "scripts": {
+        "installation": {
+            "script": "#!/bin/ash\r\nmkdir -p /mnt/server\r\ncd /mnt/server\r\napk add --no-cache curl jq >/dev/null 2>&1 || true\r\n\r\nVERSION=\"${MC_VERSION}\"\r\nif [ -z \"${VERSION}\" ] || [ \"${VERSION}\" = \"latest\" ]; then VERSION=\"26.2\"; fi\r\n\r\nMANIFEST=\"https://cdn.emberplugins.online/embermc/versions.json\"\r\nURL=$(curl -s \"${MANIFEST}\" | jq -r --arg v \"${VERSION}\" '.versions[$v] as $ver | $ver.builds[($ver.latest|tostring)].download')\r\n\r\nif [ -z \"${URL}\" ] || [ \"${URL}\" = \"null\" ]; then\r\n  echo \"Manifest lookup failed; using the pinned fallback.\"\r\n  URL=\"https://cdn.emberplugins.online/embermc/embermc-26.2-1.jar\"\r\nfi\r\n\r\necho \"Downloading EmberMC (${VERSION}) from ${URL}\"\r\ncurl -s -L -o \"${SERVER_JARFILE}\" \"${URL}\"\r\nif [ -s \"${SERVER_JARFILE}\" ]; then echo \"EmberMC install complete.\"; else echo \"EmberMC download failed.\"; exit 1; fi",
+            "container": "ghcr.io/pterodactyl/installers:alpine",
+            "entrypoint": "ash"
+        }
+    },
+    "variables": [
+        {
+            "name": "Minecraft Version",
+            "description": "The Minecraft version to run. Use 'latest' for the newest EmberMC supports.",
+            "env_variable": "MC_VERSION",
+            "default_value": "latest",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string|max:20"
+        },
+        {
+            "name": "Server Jar File",
+            "description": "The name of the server jarfile to run.",
+            "env_variable": "SERVER_JARFILE",
+            "default_value": "server.jar",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|regex:/^([\\w\\d._-]+)(\\.jar)$/"
+        }
+    ]
+}
